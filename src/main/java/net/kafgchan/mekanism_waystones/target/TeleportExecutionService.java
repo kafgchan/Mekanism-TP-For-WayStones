@@ -143,7 +143,7 @@ public final class TeleportExecutionService {
             BlockPos pos = target.pos();
 
             // チャンクロード検証
-            if (!targetLevel.hasChunkAt(pos)) {
+            if (!WorldUtils.isBlockLoaded(targetLevel, pos)) {
                 targetLevel.getChunkSource().getChunk(pos.getX() >> 4, pos.getZ() >> 4, true);
             }
 
@@ -193,7 +193,7 @@ public final class TeleportExecutionService {
         BlockState head = level.getBlockState(pos.above());
 
         // 足元と頭が固体ブロックで埋まって窒息しないこと
-        if (feet.blocksMotion() || head.blocksMotion()) {
+        if (feet.isSuffocating(level, pos) || head.isSuffocating(level, pos.above())) {
             return false;
         }
 
