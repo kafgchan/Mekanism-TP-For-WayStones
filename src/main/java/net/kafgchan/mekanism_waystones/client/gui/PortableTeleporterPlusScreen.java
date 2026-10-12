@@ -29,6 +29,7 @@ public class PortableTeleporterPlusScreen extends AbstractContainerScreen<Portab
     private static final int TEXT_DIM = 0xFF8A9BA8;
     private static final int TEXT_WHITE = 0xFFEAEAEA;
     private static final int COST_RED = 0xFFFF5555;
+    private static final int FE_GREEN = 0xFF38D648;
 
     private static final int VISIBLE_ROWS = 5;
     private static final int ROW_HEIGHT = 15;
@@ -261,7 +262,7 @@ public class PortableTeleporterPlusScreen extends AbstractContainerScreen<Portab
         float energyRatio = (float) menu.getEnergy() / ItemPortableTeleporterPlus.MAX_ENERGY;
         int fillW = (int) (barW * Mth.clamp(energyRatio, 0.0f, 1.0f));
         if (fillW > 0) {
-            guiGraphics.fill(barX + 1, barY + 1, barX + fillW - 1, barY + barH - 1, ACCENT_CYAN);
+            guiGraphics.fill(barX + 1, barY + 1, barX + fillW - 1, barY + barH - 1, FE_GREEN);
         }
 
         String energyText = (menu.getEnergy() / 1000) + "k FE";

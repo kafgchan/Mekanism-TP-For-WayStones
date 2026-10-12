@@ -27,7 +27,7 @@ public class ItemPortableTeleporterPlus extends Item {
 
     public static final int MAX_ENERGY = 800_000;
     public static final int MAX_TRANSFER = 800_000;
-    private static final int ENERGY_BAR_COLOR = 0x00E5FF; // Mekanism シアン
+    private static final int ENERGY_BAR_COLOR = 0x38D648; // Forge Energy グリーン (FE)
 
     public ItemPortableTeleporterPlus(Properties properties) {
         super(properties.stacksTo(1).rarity(Rarity.RARE));
