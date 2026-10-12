@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GitHub release](https://img.shields.io/github/v/release/kafgchan/Mekanism-TP-For-WayStones?include_prereleases&label=Release&color=brightgreen)](https://github.com/kafgchan/Mekanism-TP-For-WayStones/releases)
 
-**Mekanism: TP for Waystones** は、工業化 Mod の金字塔 **Mekanism** のテレポート周波数と、拠点間・探索ワープの標準である **Waystones** の登録地点を、単一のハイテク携帯端末から統合管理・テレポート可能にする Minecraft 1.20.1 / Forge 向け公式連携 Mod です。
+**Mekanism: TP for Waystones** は、工業化 Mod の金字塔 **Mekanism** のテレポート周波数と、拠点間・探索ワープの標準である **Waystones** の登録地点を、単一のハイテク携帯端末から統合管理・テレポート可能にする Minecraft 1.20.1 / Forge 向け連携 Mod です。
 
 ---
 
