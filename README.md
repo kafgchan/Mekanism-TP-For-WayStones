@@ -1,84 +1,120 @@
 # Mekanism: TP for Waystones
 
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-brightgreen.svg)](https://minecraft.net/)
-[![NeoForge](https://img.shields.io/badge/NeoForge-21.1.259-orange.svg)](https://neoforged.net/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![NeoForge](https://img.shields.io/badge/NeoForge-21.1.259+-orange.svg)](https://neoforged.net/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/kafgchan/Mekanism-TP-For-WayStones?include_prereleases&label=Release&color=brightgreen)](https://github.com/kafgchan/Mekanism-TP-For-WayStones/releases)
 
-**Mekanism: TP for Waystones** は、工業化 Mod の代表格である **Mekanism** のテレポート周波数と、探索・拠点間移動の標準である **Waystones** のワープ地点を単一の高機能携帯端末からシームレスに操作・テレポート可能にする Minecraft 1.21.1 / NeoForge 向け連携 Mod です。
+**Mekanism: TP for Waystones** は、工業化 Mod の金字塔 **Mekanism** のテレポート周波数と、拠点間・探索ワープの標準である **Waystones** の登録地点を、単一のハイテク携帯端末から統合管理・テレポート可能にする Minecraft 1.21.1 / NeoForge 向け公式連携 Mod です。
 
 ---
 
-## 🌟 主な特徴
+## 🌟 主な特徴 / Features
 
-- 📱 **統合携帯端末「Portable Teleporter Plus」**:
-  - 単一の洗練された GUI から、Waystones の解放済み地点と Mekanism の周波数テレポート先を一括管理。
-- 🔒 **所有者管理システム (Ownership Security)**:
-  - 初回使用者の UUID をアイテムに永続記録。
-  - 所有者以外のプレイヤーによる操作を安全にブロック。
-- ⚡ **エネルギー管理システム (FE / Forge Energy)**:
-  - 基本容量 **800,000 FE (800 kFE)**。
-  - Mekanism の充電設備（Chargepad や Energy Cube 等）でそのまま充電互換。
-  - シアンカラー（Mekanism Cyan）のリアルタイム残量バー表示。
-- 📏 **スマートなテレポートコスト計算**:
-  - 同一ディメンション内: $\lceil \text{直線距離}/1000 \rceil\text{ FE}$（固定基本料金 0 FE）。
+- 📱 **統合携帯端末「Portable Teleporter Plus」 (ポータブルテレポーター・プラス)**:
+  - 洗練された専用 GUI から、Waystones の解放済みワープ地点と Mekanism の周波数テレポート先を一括一覧表示・選択テレポート可能。
+- 🔒 **所有者保護システム (Ownership Security)**:
+  - 初回使用時にプレイヤーの UUID と名前をデータコンポーネントとしてアイテムへ永続登録。
+  - 所有者以外のプレイヤーによる不正な操作・アクセスを自動防御。
+- ⚡ **FE エネルギー管理 & Mekanism 完全充電互換**:
+  - Forge Energy (FE) 対応。基本容量 **800,000 FE (800 kFE)**。
+  - Mekanism の充電設備（Chargepad や Energy Cube 等）でそのまま急速充電が可能。
+  - 耐久ゲージには視認性の高い FE グリーン (`#38D648`) カラーを採用。
+- 📏 **スマートなコスト計算 & 安全テレポート**:
+  - 同一ディメンション内: $\lceil \text{直線距離} / 1000 \rceil\text{ FE}$（基本 0 FE）。
   - 異なるディメンション間: 一律 500 FE。
-  - **安全確定消費**: 転送が成功した瞬間のみエネルギーを確定消費。
-- 🎨 **Mekanism 調のハイテック GUI**:
-  - `ALL` / `MEK` / `WAY` の 3 タブ切り替え。
-  - 地点名・周波数名のインクリメンタル検索。
-  - スクロールリスト、詳細情報パネル、エネルギーゲージ、Teleport ボタン。
+  - **二重検証**: 着地点の窒息・奈落・溶岩・チャンクロード状態をサーバー側で厳密に検証し、安全が確認された場合のみエネルギーを確定消費。
+- 🎨 **Mekanism テイストの多機能 GUI**:
+  - `ALL`（すべて） / `MEK`（Mekanism 周波数） / `WAY`（Waystones 地点）の 3 タブ切り替え。
+  - インクリメンタル文字列検索フィルター。
+  - スムーズスクロールリスト、詳細情報表示（ディメンション・直線距離・消費 FE）、リアルタイム FE バー。
 
 ---
 
-## 🛠 クラフトレシピ
+## 🛠 クラフトレシピ / Crafting Recipe
 
 3×3 作業台で以下の通りクラフト可能です：
 
 ```
-[ HDPE Pellet ]   [ Redstone Torch ]       [ HDPE Pellet ]
-[ Energy Tablet ] [ Teleportation Core ]   [ Energy Tablet ]
+[ HDPE Pellet ]   [ Redstone Torch ]        [ HDPE Pellet ]
+[ Energy Tablet ] [ Teleportation Core ]    [ Energy Tablet ]
 [ HDPE Pellet ]   [ Warp Stone (Waystones)] [ HDPE Pellet ]
 ```
 
-| 材料 | 内部 ID | 数量 | 所属 Mod |
-| :--- | :--- | :---: | :--- |
-| **HDPE Pellet** | `mekanism:hdpe_pellet` | 4 | Mekanism |
-| **Redstone Torch** | `minecraft:redstone_torch` | 1 | Vanilla Minecraft |
-| **Energy Tablet** | `mekanism:energy_tablet` | 2 | Mekanism |
-| **Teleportation Core** | `mekanism:teleportation_core` | 1 | Mekanism |
-| **Warp Stone** | `waystones:warp_stone` | 1 | Waystones |
+| スロット | アイテム名 | 内部 ID | 数量 | 所属 Mod |
+| :--- | :--- | :--- | :---: | :--- |
+| **四隅** | HDPE Pellet | `mekanism:hdpe_pellet` | 4 | Mekanism |
+| **上中央** | Redstone Torch | `minecraft:redstone_torch` | 1 | Vanilla Minecraft |
+| **左右中央** | Energy Tablet | `mekanism:energy_tablet` | 2 | Mekanism |
+| **中央** | Teleportation Core | `mekanism:teleportation_core` | 1 | Mekanism |
+| **下中央** | Warp Stone | `waystones:warp_stone` | 1 | Waystones |
 
-> `Teleportation Core` または `Warp Stone` を入手すると、レシピブックに自動的にレシピが登録されます。
-
----
-
-## 📋 動作要件
-
-- **Minecraft**: 1.21.1
-- **Mod Loader**: NeoForge 21.1.259+
-- **Java**: 21
-- **必須前提 Mod**:
-  - [Mekanism](https://modrinth.com/mod/mekanism) (1.21.1-10.7.19.85+)
-  - [Waystones](https://modrinth.com/mod/waystones) (21.1.7+neoforge-1.21.1+)
-  - [Balm](https://modrinth.com/mod/balm) (21.0.21+neoforge-1.21.1+)
+> `Teleportation Core` または `Warp Stone` を入手すると、レシピブック（Advancement）に自動解放されます。
 
 ---
 
-## 🔨 ビルド方法
+## ⚙️ 設定 / Configuration
+
+Mod の各種数値は `config/mekanism_waystones-common.toml` から自由にカスタマイズ可能です。
+
+```toml
+[energy]
+    # 最大エネルギー容量 (FE)
+    # 範囲: 1,000 ~ 100,000,000, デフォルト: 800000
+    maxEnergy = 800000
+
+    # 1tickあたりの最大受給・転送レート (FE/t)
+    # 範囲: 100 ~ 100,000,000, デフォルト: 800000
+    maxTransfer = 800000
+
+[cost]
+    # 異次元間テレポートに必要なエネルギー (FE)
+    # 範囲: 0 ~ 10,000,000, デフォルト: 500
+    crossDimensionCost = 500
+
+    # 1 FE あたりに移動できる直線ブロック距離
+    # 範囲: 0.1 ~ 100,000.0, デフォルト: 1000.0
+    distancePerFe = 1000.0
+
+    # 同一ディメンション内の基本固定消費エネルギー (FE)
+    # 範囲: 0 ~ 1,000,000, デフォルト: 0
+    baseCost = 0
+
+    # 1回のテレポートでの最大消費エネルギー上限 (FE)
+    # 範囲: 0 ~ 100,000,000, デフォルト: 800000
+    maxCost = 800000
+```
+
+---
+
+## 📋 動作要件 / Requirements
+
+- **Minecraft**: `1.21.1`
+- **Mod Loader**: `NeoForge 21.1.259+`
+- **Java**: `21`
+- **前提 Mod**:
+  - [Mekanism](https://modrinth.com/mod/mekanism) (`1.21.1-10.7.19.85+`)
+  - [Waystones](https://modrinth.com/mod/waystones) (`21.1.7+neoforge-1.21.1+`)
+  - [Balm](https://modrinth.com/mod/balm) (`21.0.21+neoforge-1.21.1+`)
+
+---
+
+## 🔨 ビルド方法 / Building from Source
 
 ```bash
 # リポジトリのクローン
 git clone https://github.com/kafgchan/Mekanism-TP-For-WayStones.git
 cd Mekanism-TP-For-WayStones
 
-# ビルドの実行
+# ビルド実行
 ./gradlew build
 ```
 
-ビルド完了後、`build/libs/` 配下に Mod JAR ファイルが生成されます。
+ビルド完了後、`build/libs/mekanism-tp-for-waystone-neoforge-1.21.1-1.0.0.jar` が生成されます。
 
 ---
 
-## 📖 ライセンス
+## 📄 ライセンス / License
 
-MIT License
+本プロジェクトは [MIT License](LICENSE) の下で公開されています。
+Copyright (c) 2024-2026 [kafgchan](https://github.com/kafgchan)
