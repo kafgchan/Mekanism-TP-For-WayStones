@@ -32,6 +32,7 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev/"
     }
+    mavenCentral()
     maven {
         name = "Twelve Iterations"
         url = "https://maven.twelveiterations.com/repository/maven-public/"
@@ -132,6 +133,21 @@ dependencies {
         transitive = false
     }
     implementation "net.blay09.mods:balm-neoforge:${balm_version}"
+
+    // JUnit 5 for unit testing
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    test {
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

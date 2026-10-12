@@ -40,6 +40,15 @@ public record PacketTeleportRequest(InteractionHand hand, TeleportTarget target)
                 TeleportExecutionService.Result result = TeleportExecutionService.executeTeleport(serverPlayer, stack, packet.target());
                 if (result == TeleportExecutionService.Result.SUCCESS) {
                     serverPlayer.closeContainer();
+                } else {
+                    net.minecraft.network.chat.Component msg = switch (result) {
+                        case NOT_OWNER -> net.minecraft.network.chat.Component.translatable("message.mekanism_waystones.not_owner_generic");
+                        case INSUFFICIENT_ENERGY -> net.minecraft.network.chat.Component.translatable("message.mekanism_waystones.insufficient_energy");
+                        case TARGET_NOT_FOUND -> net.minecraft.network.chat.Component.translatable("message.mekanism_waystones.target_not_found");
+                        case UNSAFE_DESTINATION -> net.minecraft.network.chat.Component.translatable("message.mekanism_waystones.unsafe_destination");
+                        default -> net.minecraft.network.chat.Component.translatable("message.mekanism_waystones.teleport_failed");
+                    };
+                    serverPlayer.sendSystemMessage(msg.copy().withStyle(net.minecraft.ChatFormatting.RED));
                 }
             }
         });

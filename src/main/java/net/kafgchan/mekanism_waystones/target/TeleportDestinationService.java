@@ -54,7 +54,7 @@ public final class TeleportDestinationService {
                 }
             }
         } catch (Exception e) {
-            // 例外時は安全にスキップ
+            net.kafgchan.mekanism_waystones.MekanismTPforWaystones.LOGGER.warn("Failed to collect Waystone destinations for player '{}'", player.getName().getString(), e);
         }
     }
 
@@ -81,7 +81,7 @@ public final class TeleportDestinationService {
                 addFrequencies(trustedMgr.getFrequencies(), targets, processedFrequencies);
             }
         } catch (Exception e) {
-            // 例外時は安全にスキップ
+            net.kafgchan.mekanism_waystones.MekanismTPforWaystones.LOGGER.warn("Failed to collect Mekanism frequencies for player '{}'", player.getName().getString(), e);
         }
     }
 
@@ -113,5 +113,22 @@ public final class TeleportDestinationService {
                 }
             }
         }
+    }
+
+    /**
+     * クライアントから送信されたターゲット情報を、サーバー側で利用可能な正規の転送先と照合して再解決する
+     * 不正な座標やアクセス権のない地点へのテレポートを防ぐセキュリティ検証
+     */
+    public static java.util.Optional<TeleportTarget> resolveTarget(ServerPlayer player, TargetType type, String targetId) {
+        if (player == null || type == null || targetId == null) {
+            return java.util.Optional.empty();
+        }
+        List<TeleportTarget> available = getAvailableTargets(player);
+        for (TeleportTarget target : available) {
+            if (target.type() == type && target.id().equals(targetId)) {
+                return java.util.Optional.of(target);
+            }
+        }
+        return java.util.Optional.empty();
     }
 }
