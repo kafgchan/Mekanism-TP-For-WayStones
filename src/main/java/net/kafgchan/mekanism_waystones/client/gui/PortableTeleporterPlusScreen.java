@@ -15,6 +15,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -116,11 +118,12 @@ public class PortableTeleporterPlusScreen extends AbstractContainerScreen<Portab
     }
 
     private void updateTeleportButton() {
-        if (selectedTarget == null || minecraft == null || minecraft.player == null) {
+        net.minecraft.client.Minecraft mc = this.minecraft;
+        if (selectedTarget == null || mc == null || mc.player == null) {
             teleportButton.active = false;
             return;
         }
-        int cost = TeleportCostCalculator.calculateCost(minecraft.player, selectedTarget);
+        int cost = TeleportCostCalculator.calculateCost(mc.player, selectedTarget);
         teleportButton.active = menu.getEnergy() >= cost;
     }
 
@@ -171,7 +174,7 @@ public class PortableTeleporterPlusScreen extends AbstractContainerScreen<Portab
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int x = this.leftPos;
         int y = this.topPos;
 
@@ -227,8 +230,9 @@ public class PortableTeleporterPlusScreen extends AbstractContainerScreen<Portab
         guiGraphics.fill(rightX, rightY, rightX + rightW, rightY + rightH, PANEL_BG);
         guiGraphics.renderOutline(rightX - 1, rightY - 1, rightW + 2, rightH + 2, BORDER_COLOR);
 
-        if (selectedTarget != null && minecraft != null && minecraft.player != null) {
-            int cost = TeleportCostCalculator.calculateCost(minecraft.player, selectedTarget);
+        net.minecraft.client.Minecraft mc = this.minecraft;
+        if (selectedTarget != null && mc != null && mc.player != null) {
+            int cost = TeleportCostCalculator.calculateCost(mc.player, selectedTarget);
             boolean canAfford = menu.getEnergy() >= cost;
 
             guiGraphics.drawString(this.font, "Destination:", rightX + 4, rightY + 4, TEXT_DIM, false);
@@ -238,9 +242,9 @@ public class PortableTeleporterPlusScreen extends AbstractContainerScreen<Portab
             String dimDisp = selectedTarget.dimension().location().getPath();
             guiGraphics.drawString(this.font, "Dim: " + dimDisp, rightX + 4, rightY + 28, TEXT_WHITE, false);
 
-            boolean sameDim = minecraft.player.level().dimension().equals(selectedTarget.dimension());
+            boolean sameDim = mc.player.level().dimension().equals(selectedTarget.dimension());
             if (sameDim) {
-                double dist = Math.sqrt(minecraft.player.blockPosition().distSqr(selectedTarget.pos()));
+                double dist = Math.sqrt(mc.player.blockPosition().distSqr(selectedTarget.pos()));
                 guiGraphics.drawString(this.font, String.format(Locale.ROOT, "Dist: %.0fm", dist), rightX + 4, rightY + 40, TEXT_DIM, false);
             } else {
                 guiGraphics.drawString(this.font, "Dist: Interdim", rightX + 4, rightY + 40, TEXT_DIM, false);
@@ -285,12 +289,12 @@ public class PortableTeleporterPlusScreen extends AbstractContainerScreen<Portab
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(this.font, this.title, 8, 5, ACCENT_CYAN, false);
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }

@@ -10,6 +10,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -50,13 +52,14 @@ public class PortableTeleporterPlusMenu extends AbstractContainerMenu {
         return energy;
     }
 
+    @NotNull
     @Override
-    public ItemStack quickMoveStack(Player player, int index) {
+    public ItemStack quickMoveStack(@NotNull Player player, int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         if (!player.isAlive()) {
             return false;
         }

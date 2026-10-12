@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.148'
     id 'idea'
+    id 'eclipse'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -199,5 +200,24 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
+    }
+}
+
+eclipse {
+    jdt {
+        file {
+            withProperties { properties ->
+                properties['org.eclipse.jdt.core.compiler.annotation.nullanalysis'] = 'disabled'
+                properties['org.eclipse.jdt.core.compiler.problem.nullUncheckedConversion'] = 'ignore'
+                properties['org.eclipse.jdt.core.compiler.problem.potentialNullReference'] = 'ignore'
+                properties['org.eclipse.jdt.core.compiler.problem.nullReference'] = 'ignore'
+                properties['org.eclipse.jdt.core.compiler.problem.missingNonNullAnnotation'] = 'ignore'
+                properties['org.eclipse.jdt.core.compiler.problem.missingNonNullByDefaultAnnotation'] = 'ignore'
+                properties['org.eclipse.jdt.core.compiler.problem.redundantNullAnnotation'] = 'ignore'
+                properties['org.eclipse.jdt.core.compiler.problem.nonnullTypeVariableFromLegacyMethod'] = 'ignore'
+                properties['org.eclipse.jdt.core.compiler.problem.nullSpecViolation'] = 'ignore'
+                properties['org.eclipse.jdt.core.compiler.problem.nullAnnotationInferenceConflict'] = 'ignore'
+            }
+        }
     }
 }
