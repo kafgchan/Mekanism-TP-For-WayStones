@@ -29,6 +29,14 @@ public class ItemPortableTeleporterPlus extends Item {
     public static final int MAX_TRANSFER = 800_000;
     private static final int ENERGY_BAR_COLOR = 0x38D648; // Forge Energy グリーン (FE)
 
+    public static int getMaxEnergy() {
+        return net.kafgchan.mekanism_waystones.config.TeleporterConfig.getMaxEnergy();
+    }
+
+    public static int getMaxTransfer() {
+        return net.kafgchan.mekanism_waystones.config.TeleporterConfig.getMaxTransfer();
+    }
+
     public ItemPortableTeleporterPlus(Properties properties) {
         super(properties.stacksTo(1).rarity(Rarity.RARE));
     }
@@ -38,7 +46,7 @@ public class ItemPortableTeleporterPlus extends Item {
     }
 
     public static void setEnergy(ItemStack stack, int energy) {
-        stack.set(ModDataComponents.ENERGY.get(), Math.clamp(energy, 0, MAX_ENERGY));
+        stack.set(ModDataComponents.ENERGY.get(), Math.clamp(energy, 0, getMaxEnergy()));
     }
 
     @Override
@@ -48,7 +56,8 @@ public class ItemPortableTeleporterPlus extends Item {
 
     @Override
     public int getBarWidth(@NotNull ItemStack stack) {
-        return Math.round(13.0F * getEnergy(stack) / MAX_ENERGY);
+        int max = getMaxEnergy();
+        return max > 0 ? Math.round(13.0F * getEnergy(stack) / max) : 0;
     }
 
     @Override
@@ -74,7 +83,7 @@ public class ItemPortableTeleporterPlus extends Item {
         NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
         int currentEnergy = getEnergy(stack);
         tooltip.add(Component.translatable("tooltip.mekanism_waystones.energy",
-                nf.format(currentEnergy), nf.format(MAX_ENERGY))
+                nf.format(currentEnergy), nf.format(getMaxEnergy()))
                 .withStyle(ChatFormatting.GREEN));
 
         tooltip.add(Component.translatable("tooltip.mekanism_waystones.portable_teleporter_plus.desc")

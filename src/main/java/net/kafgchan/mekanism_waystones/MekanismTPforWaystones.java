@@ -24,6 +24,9 @@ public class MekanismTPforWaystones {
         modEventBus.addListener(this::registerCapabilities);
         modEventBus.addListener(net.kafgchan.mekanism_waystones.network.ModPayloads::register);
 
+        // Register config
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, net.kafgchan.mekanism_waystones.config.TeleporterConfig.SPEC);
+
         // Register registries
         ModDataComponents.register(modEventBus);
         ModItems.register(modEventBus);
@@ -41,8 +44,8 @@ public class MekanismTPforWaystones {
                 (stack, ctx) -> new ComponentEnergyStorage(
                         stack,
                         ModDataComponents.ENERGY.get(),
-                        ItemPortableTeleporterPlus.MAX_ENERGY,
-                        ItemPortableTeleporterPlus.MAX_TRANSFER
+                        ItemPortableTeleporterPlus.getMaxEnergy(),
+                        ItemPortableTeleporterPlus.getMaxTransfer()
                 ),
                 ModItems.PORTABLE_TELEPORTER_PLUS
         );

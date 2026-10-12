@@ -263,7 +263,7 @@ public class PortableTeleporterPlusScreen extends AbstractContainerScreen<Portab
         guiGraphics.fill(barX, barY, barX + barW, barY + barH, 0xFF0E1013);
         guiGraphics.renderOutline(barX, barY, barW, barH, BORDER_COLOR);
 
-        float energyRatio = (float) menu.getEnergy() / ItemPortableTeleporterPlus.MAX_ENERGY;
+        float energyRatio = (float) menu.getEnergy() / Math.max(1, ItemPortableTeleporterPlus.getMaxEnergy());
         int fillW = (int) (barW * Mth.clamp(energyRatio, 0.0f, 1.0f));
         if (fillW > 0) {
             guiGraphics.fill(barX + 1, barY + 1, barX + fillW - 1, barY + barH - 1, FE_GREEN);

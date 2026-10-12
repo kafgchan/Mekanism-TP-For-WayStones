@@ -58,4 +58,15 @@ class TeleportCostCalculatorTest {
         assertEquals(500, TeleportCostCalculator.calculateCost(OVERWORLD, from, THE_NETHER, toSameCoord));
         assertEquals(500, TeleportCostCalculator.calculateCost(OVERWORLD, from, THE_NETHER, toFarCoord));
     }
+
+    @Test
+    @DisplayName("TeleporterConfig の安全フォールバック値が正しく機能している")
+    void testConfigDefaults() {
+        assertEquals(800_000, net.kafgchan.mekanism_waystones.config.TeleporterConfig.getMaxEnergy());
+        assertEquals(800_000, net.kafgchan.mekanism_waystones.config.TeleporterConfig.getMaxTransfer());
+        assertEquals(500, net.kafgchan.mekanism_waystones.config.TeleporterConfig.getCrossDimensionCost());
+        assertEquals(1000.0, net.kafgchan.mekanism_waystones.config.TeleporterConfig.getDistancePerFe());
+        assertEquals(0, net.kafgchan.mekanism_waystones.config.TeleporterConfig.getBaseCost());
+        assertEquals(800_000, net.kafgchan.mekanism_waystones.config.TeleporterConfig.getMaxCost());
+    }
 }

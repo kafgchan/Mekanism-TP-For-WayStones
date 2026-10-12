@@ -30,7 +30,8 @@ public final class TeleportCostCalculator {
      */
     public static int calculateCost(ResourceKey<Level> fromDim, Vec3 fromPos, ResourceKey<Level> toDim, Vec3 toPos) {
         if (!fromDim.equals(toDim)) {
-            return CROSS_DIMENSION_COST;
+            return Math.min(net.kafgchan.mekanism_waystones.config.TeleporterConfig.getCrossDimensionCost(),
+                    net.kafgchan.mekanism_waystones.config.TeleporterConfig.getMaxCost());
         }
 
         double distance = fromPos.distanceTo(toPos);
@@ -38,7 +39,13 @@ public final class TeleportCostCalculator {
             return 0;
         }
 
-        return (int) Math.ceil(distance / DISTANCE_PER_FE);
+        double distPerFe = net.kafgchan.mekanism_waystones.config.TeleporterConfig.getDistancePerFe();
+        if (distPerFe <= 0.0) {
+            distPerFe = 1000.0;
+        }
+
+        int cost = (int) Math.ceil(distance / distPerFe) + net.kafgchan.mekanism_waystones.config.TeleporterConfig.getBaseCost();
+        return Math.min(cost, net.kafgchan.mekanism_waystones.config.TeleporterConfig.getMaxCost());
     }
 
     /**
