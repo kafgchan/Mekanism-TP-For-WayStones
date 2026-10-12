@@ -1,0 +1,22 @@
+{
+  "itemGroup.mekanism_waystones.tab": "Mekanism: TP for Waystones",
+  "item.mekanism_waystones.portable_teleporter_plus": "ポータブルテレポーター・プラス",
+  "tooltip.mekanism_waystones.portable_teleporter_plus.desc": "Mekanism と Waystones を統合した携帯テレポート端末",
+  "tooltip.mekanism_waystones.owner": "所有者: %s",
+  "tooltip.mekanism_waystones.no_owner": "未登録",
+  "tooltip.mekanism_waystones.energy": "エネルギー: %s / %s FE",
+  "message.mekanism_waystones.owner_registered": "所有者として登録されました: %s",
+  "message.mekanism_waystones.not_owner": "アクセス拒否: この端末は %s の所有物です。",
+  "message.mekanism_waystones.not_owner_generic": "アクセス拒否: この端末の所有者ではありません。",
+  "message.mekanism_waystones.owner_verified_with_energy": "所有者確認完了: %s [エネルギー: %s / %s FE]",
+  "message.mekanism_waystones.insufficient_energy": "エネルギーが不足しています。",
+  "message.mekanism_waystones.target_not_found": "転送先が見つからないか、アクセス権がありません。",
+  "message.mekanism_waystones.unsafe_destination": "着地点が安全ではないため、テレポートを中断しました（窒息または危険ブロック）。",
+  "message.mekanism_waystones.teleport_failed": "テレポートに失敗しました。",
+  "gui.mekanism_waystones.teleport": "テレポート",
+  "gui.mekanism_waystones.search": "検索...",
+  "gui.mekanism_waystones.destination": "転送先",
+  "gui.mekanism_waystones.dimension": "ディメンション: %s",
+  "gui.mekanism_waystones.distance": "距離: %s",
+  "gui.mekanism_waystones.cost": "消費エネルギー: %s FE"
+}

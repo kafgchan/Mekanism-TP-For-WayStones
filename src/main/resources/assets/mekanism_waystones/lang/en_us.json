@@ -1,0 +1,22 @@
+{
+  "itemGroup.mekanism_waystones.tab": "Mekanism: TP for Waystones",
+  "item.mekanism_waystones.portable_teleporter_plus": "Portable Teleporter Plus",
+  "tooltip.mekanism_waystones.portable_teleporter_plus.desc": "Mekanism & Waystones Integrated Teleport Device",
+  "tooltip.mekanism_waystones.owner": "Owner: %s",
+  "tooltip.mekanism_waystones.no_owner": "Unclaimed",
+  "tooltip.mekanism_waystones.energy": "Energy: %s / %s FE",
+  "message.mekanism_waystones.owner_registered": "Registered owner: %s",
+  "message.mekanism_waystones.not_owner": "Access denied: This device belongs to %s.",
+  "message.mekanism_waystones.not_owner_generic": "Access denied: You are not the owner of this device.",
+  "message.mekanism_waystones.owner_verified_with_energy": "Owner verified: %s [Energy: %s / %s FE]",
+  "message.mekanism_waystones.insufficient_energy": "Insufficient energy for teleportation.",
+  "message.mekanism_waystones.target_not_found": "Destination not found or access denied.",
+  "message.mekanism_waystones.unsafe_destination": "Teleport aborted: landing position is unsafe (suffocation or hazardous block).",
+  "message.mekanism_waystones.teleport_failed": "Teleport failed.",
+  "gui.mekanism_waystones.teleport": "Teleport",
+  "gui.mekanism_waystones.search": "Search...",
+  "gui.mekanism_waystones.destination": "Destination",
+  "gui.mekanism_waystones.dimension": "Dimension: %s",
+  "gui.mekanism_waystones.distance": "Distance: %s",
+  "gui.mekanism_waystones.cost": "Cost: %s FE"
+}
