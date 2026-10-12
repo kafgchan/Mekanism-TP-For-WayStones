@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "P": {
+      "item": "mekanism:hdpe_pellet"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
+    },
+    "E": {
+      "item": "mekanism:energy_tablet"
+    },
+    "C": {
+      "item": "mekanism:teleportation_core"
+    },
+    "W": {
+      "item": "waystones:warp_stone"
+    }
+  },
+  "pattern": [
+    "PTP",
+    "ECE",
+    "PWP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mekanism_waystones:portable_teleporter_plus"
+  }
+}

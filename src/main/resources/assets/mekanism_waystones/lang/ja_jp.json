@@ -1,0 +1,17 @@
+{
+  "itemGroup.mekanism_waystones.tab": "Mekanism: TP for Waystones",
+  "item.mekanism_waystones.portable_teleporter_plus": "ポータブルテレポーター・プラス",
+  "tooltip.mekanism_waystones.portable_teleporter_plus.desc": "Mekanism と Waystones を統合した携帯テレポート端末",
+  "tooltip.mekanism_waystones.owner": "所有者: %s",
+  "tooltip.mekanism_waystones.no_owner": "未登録",
+  "tooltip.mekanism_waystones.energy": "エネルギー: %s / %s FE",
+  "message.mekanism_waystones.owner_registered": "所有者として登録されました: %s",
+  "message.mekanism_waystones.not_owner": "アクセス拒否: この端末は %s の所有物です。",
+  "message.mekanism_waystones.owner_verified_with_energy": "所有者確認完了: %s [エネルギー: %s / %s FE]",
+  "gui.mekanism_waystones.teleport": "テレポート",
+  "gui.mekanism_waystones.search": "検索...",
+  "gui.mekanism_waystones.destination": "転送先",
+  "gui.mekanism_waystones.dimension": "ディメンション: %s",
+  "gui.mekanism_waystones.distance": "距離: %s",
+  "gui.mekanism_waystones.cost": "消費エネルギー: %s FE"
+}
