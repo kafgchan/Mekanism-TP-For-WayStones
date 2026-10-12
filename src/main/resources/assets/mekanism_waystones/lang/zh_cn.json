@@ -1,0 +1,22 @@
+{
+  "itemGroup.mekanism_waystones.tab": "Mekanism: TP for Waystones",
+  "item.mekanism_waystones.portable_teleporter_plus": "便携式传送器+",
+  "tooltip.mekanism_waystones.portable_teleporter_plus.desc": "整合了通用机械与指路石的便携式传送设备",
+  "tooltip.mekanism_waystones.owner": "拥有者：%s",
+  "tooltip.mekanism_waystones.no_owner": "未绑定",
+  "tooltip.mekanism_waystones.energy": "能量：%s / %s FE",
+  "message.mekanism_waystones.owner_registered": "已成功绑定拥有者：%s",
+  "message.mekanism_waystones.not_owner": "拒绝访问：该设备属于 %s。",
+  "message.mekanism_waystones.not_owner_generic": "拒绝访问：您不是该设备的拥有者。",
+  "message.mekanism_waystones.owner_verified_with_energy": "拥有者验证成功：%s [能量：%s / %s FE]",
+  "message.mekanism_waystones.insufficient_energy": "能量不足，无法传送。",
+  "message.mekanism_waystones.target_not_found": "未找到目的地或无访问权限。",
+  "message.mekanism_waystones.unsafe_destination": "传送已中止：着陆点不安全（窒息或危险方块）。",
+  "message.mekanism_waystones.teleport_failed": "传送失败。",
+  "gui.mekanism_waystones.teleport": "传送",
+  "gui.mekanism_waystones.search": "搜索...",
+  "gui.mekanism_waystones.destination": "目的地",
+  "gui.mekanism_waystones.dimension": "维度：%s",
+  "gui.mekanism_waystones.distance": "距离：%s",
+  "gui.mekanism_waystones.cost": "消耗能量：%s FE"
+}

@@ -1,0 +1,22 @@
+{
+  "itemGroup.mekanism_waystones.tab": "Mekanism: TP for Waystones",
+  "item.mekanism_waystones.portable_teleporter_plus": "휴대용 텔레포터 플러스",
+  "tooltip.mekanism_waystones.portable_teleporter_plus.desc": "메카니즘과 웨이스톤을 통합한 휴대용 텔레포트 장치",
+  "tooltip.mekanism_waystones.owner": "소유자: %s",
+  "tooltip.mekanism_waystones.no_owner": "미등록",
+  "tooltip.mekanism_waystones.energy": "에너지: %s / %s FE",
+  "message.mekanism_waystones.owner_registered": "소유자로 등록되었습니다: %s",
+  "message.mekanism_waystones.not_owner": "접근 거부: 이 장치는 %s의 소유입니다.",
+  "message.mekanism_waystones.not_owner_generic": "접근 거부: 이 장치의 소유자가 아닙니다.",
+  "message.mekanism_waystones.owner_verified_with_energy": "소유자 확인 완료: %s [에너지: %s / %s FE]",
+  "message.mekanism_waystones.insufficient_energy": "에너지가 부족하여 텔레포트할 수 없습니다.",
+  "message.mekanism_waystones.target_not_found": "목적지를 찾을 수 없거나 접근 권한이 없습니다.",
+  "message.mekanism_waystones.unsafe_destination": "텔레포트 중단: 착지 지점이 안전하지 않습니다 (질식 또는 위험 블록).",
+  "message.mekanism_waystones.teleport_failed": "텔레포트에 실패했습니다.",
+  "gui.mekanism_waystones.teleport": "텔레포트",
+  "gui.mekanism_waystones.search": "검색...",
+  "gui.mekanism_waystones.destination": "목적지",
+  "gui.mekanism_waystones.dimension": "차원: %s",
+  "gui.mekanism_waystones.distance": "거리: %s",
+  "gui.mekanism_waystones.cost": "소비 에너지: %s FE"
+}
