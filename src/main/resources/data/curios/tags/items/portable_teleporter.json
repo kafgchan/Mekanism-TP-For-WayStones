@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "mekanism:portable_teleporter",
+    "mekanism_waystones:portable_teleporter_plus"
+  ]
+}

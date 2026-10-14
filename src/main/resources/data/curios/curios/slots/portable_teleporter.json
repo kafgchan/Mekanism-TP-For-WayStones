@@ -1,0 +1,7 @@
+{
+  "order": 150,
+  "size": 1,
+  "icon": "mekanism_waystones:slot/empty_portable_teleporter_slot",
+  "add_cosmetic": false,
+  "render_toggle": false
+}

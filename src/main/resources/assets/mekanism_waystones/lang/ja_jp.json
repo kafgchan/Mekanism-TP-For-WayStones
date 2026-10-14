@@ -21,5 +21,7 @@
   "gui.mekanism_waystones.cost": "消費エネルギー: %s FE",
   "key.categories.mekanism_waystones": "Mekanism: TP for Waystones",
   "key.mekanism_waystones.open_teleporter": "携帯テレポート端末を開く",
-  "message.mekanism_waystones.teleporter_not_found": "Curiosスロットまたはインベントリ内にポータブルテレポーターが見つかりません。"
+  "message.mekanism_waystones.teleporter_not_found": "Curiosスロットまたはインベントリ内にポータブルテレポーターが見つかりません。",
+  "curios.identifier.portable_teleporter": "ポータブルテレポーター",
+  "curios.modifiers.portable_teleporter": "ポータブルテレポータースロット装備時:"
 }
