@@ -1,4 +1,4 @@
-# Mekanism: TP for Waystones
+# Mekanism: TP for Waystones (NeoForge 1.21.1)
 
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-brightgreen.svg)](https://minecraft.net/)
 [![NeoForge](https://img.shields.io/badge/NeoForge-21.1.259+-orange.svg)](https://neoforged.net/)
@@ -13,6 +13,14 @@
 
 - 📱 **統合携帯端末「Portable Teleporter Plus」 (ポータブルテレポーター・プラス)**:
   - 洗練された専用 GUI から、Waystones の解放済みワープ地点と Mekanism の周波数テレポート先を一括一覧表示・選択テレポート可能。
+- 💍 **Curios API オプション連携 & 専用スロット新設 (v1.0.2)**:
+  - Curios 導入時、アクセサリーインベントリに専用スロット「**Portable Teleporter** (`portable_teleporter`)」が 1 枠追加されます。
+  - 専用スロットには **Mekanism 純正 Portable Teleporter** と **Portable Teleporter Plus** の両方が共用装備可能（排他）。
+  - 汎用スロット（`curio`, `charm`, `belt`, `body`）にも装備可能。
+  - Curios 未導入環境でもクラッシュせず 100% 動作する完全ソフト依存。
+- ⌨️ **スマートなショートカットキー起動 (デフォルト `V` キー)**:
+  - 手に持っていなくても、Curios スロットやインベントリからワンキーで GUI を即座にオープン。
+  - Plus 版だけでなく、Mekanism 純正 Portable Teleporter を装備・所持している場合でも純正テレポート画面を呼び出し可能。
 - 🔒 **所有者保護システム (Ownership Security)**:
   - 初回使用時にプレイヤーの UUID と名前をデータコンポーネントとしてアイテムへ永続登録。
   - 所有者以外のプレイヤーによる不正な操作・アクセスを自動防御。
@@ -85,6 +93,16 @@ Mod の各種数値は `config/mekanism_waystones-common.toml` から自由に�
     # 1回のテレポートでの最大消費エネルギー上限 (FE)
     # 範囲: 0 ~ 100,000,000, デフォルト: 800000
     maxCost = 800000
+
+[integration]
+    # Curios API との連携を有効化するかどうか
+    enableCurios = true
+
+    # ショートカットキーバインドによる端末GUI起動を有効化するかどうか
+    enableKeybind = true
+
+    # ショートカットキー押下時にインベントリ内も検索対象に含めるかどうか
+    keybindSearchInventory = true
 ```
 
 ---
@@ -98,21 +116,37 @@ Mod の各種数値は `config/mekanism_waystones-common.toml` から自由に�
   - [Mekanism](https://modrinth.com/mod/mekanism) (`1.21.1-10.7.19.85+`)
   - [Waystones](https://modrinth.com/mod/waystones) (`21.1.7+neoforge-1.21.1+`)
   - [Balm](https://modrinth.com/mod/balm) (`21.0.21+neoforge-1.21.1+`)
+- **任意連携 Mod (オプション)**:
+  - [Curios API](https://modrinth.com/mod/curios) (`9.5.1+1.21.1+`)
 
 ---
 
-## 🔨 ビルド方法 / Building from Source
+## 🔨 ビルド手順 / Building from Source
 
 ```bash
-# リポジトリのクローン
-git clone https://github.com/kafgchan/Mekanism-TP-For-WayStones.git
-cd Mekanism-TP-For-WayStones
+# Windows
+.\gradlew.bat build
 
-# ビルド実行
+# Linux / macOS
 ./gradlew build
 ```
 
-ビルド完了後、`build/libs/mekanism-tp-for-waystone-neoforge-1.21.1-1.0.0.jar` が生成されます。
+ビルドが完了すると、`build/libs/mekanism-tp-for-waystone-neoforge-1.21.1-1.0.2.jar` が生成されます。
+
+---
+
+## 📝 更新履歴 / Changelog
+
+### v1.0.2
+- **Curios API オプション連携**:
+  - アクセサリーインベントリに専用スロット「**Portable Teleporter** (`portable_teleporter`)」を新設。
+  - Mekanism 純正 Portable Teleporter と Portable Teleporter Plus の共用装備に対応。
+  - 汎用スロット（`curio`, `charm`, `belt`, `body`）への装備に対応。
+- **ショートカットキー起動機能**:
+  - デフォルト `V` キーで Curios スロット / 手持ち / インベントリから即座に GUI 起動。
+  - Mekanism 純正テレポーターのホットキー呼び出しおよびテレポート連携に対応。
+- **コンフィグ追加**:
+  - `enableCurios`, `enableKeybind`, `keybindSearchInventory` の切り替え設定を追加。
 
 ---
 
