@@ -20,10 +20,11 @@ public class ModMenuTypes {
 
     public static final Supplier<MenuType<PortableTeleporterPlusMenu>> PORTABLE_TELEPORTER_PLUS =
             MENUS.register("portable_teleporter_plus", () -> IMenuTypeExtension.create((containerId, inv, buf) -> {
-                InteractionHand hand = buf.readBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+                net.kafgchan.mekanism_waystones.target.TeleportLocationSource source =
+                        net.kafgchan.mekanism_waystones.target.TeleportLocationSource.STREAM_CODEC.decode(buf);
                 int energy = buf.readVarInt();
                 List<TeleportTarget> targets = TeleportTarget.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
-                return new PortableTeleporterPlusMenu(containerId, inv, hand, targets, energy);
+                return new PortableTeleporterPlusMenu(containerId, inv, source, targets, energy);
             }));
 
     public static void register(IEventBus modEventBus) {

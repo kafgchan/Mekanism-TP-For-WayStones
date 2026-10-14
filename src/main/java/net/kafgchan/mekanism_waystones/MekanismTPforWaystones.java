@@ -49,5 +49,7 @@ public class MekanismTPforWaystones {
                 ),
                 ModItems.PORTABLE_TELEPORTER_PLUS
         );
+
+        net.kafgchan.mekanism_waystones.compat.curios.CuriosCompat.registerCapabilities(event);
     }
 }

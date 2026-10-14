@@ -100,6 +100,13 @@ Features include Forge Energy (FE) management, ownership security, distance-base
     side="BOTH"
 
 [[dependencies.${mod_id}]]
+    modId="curios"
+    type="optional"
+    ordering="AFTER"
+    side="BOTH"
+
+
+[[dependencies.${mod_id}]]
     modId="balm"
     type="required"
     ordering="AFTER"

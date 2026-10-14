@@ -38,6 +38,10 @@ repositories {
         name = "Twelve Iterations"
         url = "https://maven.twelveiterations.com/repository/maven-public/"
     }
+    maven {
+        name = "TheIllusiveC4 Maven"
+        url = "https://maven.theillusivec4.top/"
+    }
 }
 
 base {
@@ -134,6 +138,10 @@ dependencies {
         transitive = false
     }
     implementation "net.blay09.mods:balm-neoforge:${balm_version}"
+
+    // Curios API (Optional soft dependency)
+    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
+    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
     // JUnit 5 for unit testing
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'

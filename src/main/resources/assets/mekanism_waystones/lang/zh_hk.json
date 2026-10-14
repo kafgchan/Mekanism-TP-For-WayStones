@@ -18,5 +18,8 @@
   "gui.mekanism_waystones.destination": "目的地",
   "gui.mekanism_waystones.dimension": "維度：%s",
   "gui.mekanism_waystones.distance": "距離：%s",
-  "gui.mekanism_waystones.cost": "消耗能量：%s FE"
+  "gui.mekanism_waystones.cost": "消耗能量：%s FE",
+  "key.categories.mekanism_waystones": "Mekanism: TP for Waystones",
+  "key.mekanism_waystones.open_teleporter": "開啟便攜式傳送器",
+  "message.mekanism_waystones.teleporter_not_found": "在飾物欄或背包中未找到便攜式傳送器。"
 }

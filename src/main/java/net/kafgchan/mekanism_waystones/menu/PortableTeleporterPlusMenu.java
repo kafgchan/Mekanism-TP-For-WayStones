@@ -2,6 +2,7 @@ package net.kafgchan.mekanism_waystones.menu;
 
 import net.kafgchan.mekanism_waystones.registration.ModItems;
 import net.kafgchan.mekanism_waystones.registration.ModMenuTypes;
+import net.kafgchan.mekanism_waystones.target.TeleportLocationSource;
 import net.kafgchan.mekanism_waystones.target.TeleportTarget;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -9,20 +10,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 
 public class PortableTeleporterPlusMenu extends AbstractContainerMenu {
-    private final InteractionHand hand;
+    private final TeleportLocationSource source;
     private final List<TeleportTarget> targets;
     private final int energy;
 
-    public PortableTeleporterPlusMenu(int containerId, Inventory playerInventory, InteractionHand hand, List<TeleportTarget> targets, int energy) {
+    public PortableTeleporterPlusMenu(int containerId, Inventory playerInventory, TeleportLocationSource source, List<TeleportTarget> targets, int energy) {
         super(ModMenuTypes.PORTABLE_TELEPORTER_PLUS.get(), containerId);
-        this.hand = hand;
+        this.source = source;
         this.targets = targets != null ? List.copyOf(targets) : Collections.emptyList();
         this.energy = energy;
 
@@ -40,8 +40,16 @@ public class PortableTeleporterPlusMenu extends AbstractContainerMenu {
         }
     }
 
+    public PortableTeleporterPlusMenu(int containerId, Inventory playerInventory, InteractionHand hand, List<TeleportTarget> targets, int energy) {
+        this(containerId, playerInventory, TeleportLocationSource.ofHand(hand), targets, energy);
+    }
+
+    public TeleportLocationSource getSource() {
+        return source;
+    }
+
     public InteractionHand getHand() {
-        return hand;
+        return source.getHand();
     }
 
     public List<TeleportTarget> getTargets() {
@@ -63,7 +71,7 @@ public class PortableTeleporterPlusMenu extends AbstractContainerMenu {
         if (!player.isAlive()) {
             return false;
         }
-        ItemStack held = player.getItemInHand(hand);
+        ItemStack held = source.findItem(player);
         return !held.isEmpty() && held.is(ModItems.PORTABLE_TELEPORTER_PLUS.get());
     }
 }

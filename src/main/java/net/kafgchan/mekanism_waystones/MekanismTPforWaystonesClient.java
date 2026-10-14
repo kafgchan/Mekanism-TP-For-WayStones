@@ -15,6 +15,7 @@ public class MekanismTPforWaystonesClient {
     public MekanismTPforWaystonesClient(IEventBus modEventBus, ModContainer container) {
         modEventBus.addListener(this::onClientSetup);
         modEventBus.addListener(this::registerScreens);
+        net.kafgchan.mekanism_waystones.client.ModKeyMappings.init(modEventBus);
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {

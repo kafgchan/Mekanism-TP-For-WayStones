@@ -90,46 +90,55 @@ public class ItemPortableTeleporterPlus extends Item {
                 .withStyle(ChatFormatting.DARK_GRAY));
     }
 
+    public static boolean checkOrSetOwner(Player player, ItemStack stack) {
+        TeleporterOwner owner = stack.get(ModDataComponents.OWNER.get());
+        if (owner == null) {
+            // 初回使用時: 使用者のUUIDと名前を所有者として登録
+            TeleporterOwner newOwner = new TeleporterOwner(player.getUUID(), player.getName().getString());
+            stack.set(ModDataComponents.OWNER.get(), newOwner);
+            player.sendSystemMessage(Component.translatable("message.mekanism_waystones.owner_registered", player.getName().getString())
+                    .withStyle(ChatFormatting.GREEN));
+            return true;
+        } else if (!owner.isOwner(player.getUUID())) {
+            // 登録された所有者と異なるプレイヤーによる操作を拒否
+            player.sendSystemMessage(Component.translatable("message.mekanism_waystones.not_owner", owner.name())
+                    .withStyle(ChatFormatting.RED));
+            return false;
+        }
+        return true;
+    }
+
+    public static void openGui(net.minecraft.server.level.ServerPlayer serverPlayer, ItemStack stack, net.kafgchan.mekanism_waystones.target.TeleportLocationSource source) {
+        if (!checkOrSetOwner(serverPlayer, stack)) {
+            return;
+        }
+        java.util.List<net.kafgchan.mekanism_waystones.target.TeleportTarget> destinations =
+                net.kafgchan.mekanism_waystones.target.TeleportDestinationService.getAvailableTargets(serverPlayer);
+        int currentEnergy = getEnergy(stack);
+
+        serverPlayer.openMenu(
+                new net.minecraft.world.SimpleMenuProvider(
+                        (id, inv, p) -> new net.kafgchan.mekanism_waystones.menu.PortableTeleporterPlusMenu(id, inv, source, destinations, currentEnergy),
+                        net.minecraft.network.chat.Component.translatable("item.mekanism_waystones.portable_teleporter_plus")
+                ),
+                buf -> {
+                    net.kafgchan.mekanism_waystones.target.TeleportLocationSource.STREAM_CODEC.encode(buf, source);
+                    buf.writeVarInt(currentEnergy);
+                    net.kafgchan.mekanism_waystones.target.TeleportTarget.STREAM_CODEC
+                            .apply(net.minecraft.network.codec.ByteBufCodecs.list())
+                            .encode(buf, destinations);
+                }
+        );
+    }
+
     @NotNull
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!level.isClientSide()) {
-            TeleporterOwner owner = stack.get(ModDataComponents.OWNER.get());
-            if (owner == null) {
-                // 初回使用時: 使用者のUUIDと名前を所有者として登録
-                TeleporterOwner newOwner = new TeleporterOwner(player.getUUID(), player.getName().getString());
-                stack.set(ModDataComponents.OWNER.get(), newOwner);
-                player.sendSystemMessage(Component.translatable("message.mekanism_waystones.owner_registered", player.getName().getString())
-                        .withStyle(ChatFormatting.GREEN));
-            } else if (!owner.isOwner(player.getUUID())) {
-                // 登録された所有者と異なるプレイヤーによる操作を拒否
-                player.sendSystemMessage(Component.translatable("message.mekanism_waystones.not_owner", owner.name())
-                        .withStyle(ChatFormatting.RED));
-                return InteractionResultHolder.fail(stack);
-            } else {
-                // 所有者一致
-            }
-
             if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-                java.util.List<net.kafgchan.mekanism_waystones.target.TeleportTarget> destinations =
-                        net.kafgchan.mekanism_waystones.target.TeleportDestinationService.getAvailableTargets(serverPlayer);
-                int currentEnergy = getEnergy(stack);
-
-                serverPlayer.openMenu(
-                        new net.minecraft.world.SimpleMenuProvider(
-                                (id, inv, p) -> new net.kafgchan.mekanism_waystones.menu.PortableTeleporterPlusMenu(id, inv, hand, destinations, currentEnergy),
-                                net.minecraft.network.chat.Component.translatable("item.mekanism_waystones.portable_teleporter_plus")
-                        ),
-                        buf -> {
-                            buf.writeBoolean(hand == net.minecraft.world.InteractionHand.MAIN_HAND);
-                            buf.writeVarInt(currentEnergy);
-                            net.kafgchan.mekanism_waystones.target.TeleportTarget.STREAM_CODEC
-                                    .apply(net.minecraft.network.codec.ByteBufCodecs.list())
-                                    .encode(buf, destinations);
-                        }
-                );
+                openGui(serverPlayer, stack, net.kafgchan.mekanism_waystones.target.TeleportLocationSource.ofHand(hand));
             }
         }
 

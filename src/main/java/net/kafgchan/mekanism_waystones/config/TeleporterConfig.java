@@ -14,6 +14,9 @@ public class TeleporterConfig {
     public static final double DEFAULT_DISTANCE_PER_FE = 1000.0;
     public static final int DEFAULT_BASE_COST = 0;
     public static final int DEFAULT_MAX_COST = 800_000;
+    public static final boolean DEFAULT_ENABLE_CURIOS = true;
+    public static final boolean DEFAULT_ENABLE_KEYBIND = true;
+    public static final boolean DEFAULT_SEARCH_INVENTORY = true;
 
     static {
         Pair<TeleporterConfig, ModConfigSpec> pair = new ModConfigSpec.Builder().configure(TeleporterConfig::new);
@@ -27,6 +30,9 @@ public class TeleporterConfig {
     public final ModConfigSpec.DoubleValue distancePerFe;
     public final ModConfigSpec.IntValue baseCost;
     public final ModConfigSpec.IntValue maxCost;
+    public final ModConfigSpec.BooleanValue enableCurios;
+    public final ModConfigSpec.BooleanValue enableKeybind;
+    public final ModConfigSpec.BooleanValue keybindSearchInventory;
 
     private TeleporterConfig(ModConfigSpec.Builder builder) {
         builder.comment("Energy Settings for Portable Teleporter Plus").push("energy");
@@ -58,6 +64,22 @@ public class TeleporterConfig {
         maxCost = builder
                 .comment("Maximum cost cap for single teleportation in FE. Default: 800,000 FE")
                 .defineInRange("maxCost", DEFAULT_MAX_COST, 0, 100_000_000);
+
+        builder.pop();
+
+        builder.comment("Integration Settings").push("integration");
+
+        enableCurios = builder
+                .comment("Enable Curios API integration if Curios is present. Default: true")
+                .define("enableCurios", DEFAULT_ENABLE_CURIOS);
+
+        enableKeybind = builder
+                .comment("Enable shortcut keybind to open Portable Teleporter Plus GUI. Default: true")
+                .define("enableKeybind", DEFAULT_ENABLE_KEYBIND);
+
+        keybindSearchInventory = builder
+                .comment("When keybind is pressed, search player inventory if not equipped in Curios slot. Default: true")
+                .define("keybindSearchInventory", DEFAULT_SEARCH_INVENTORY);
 
         builder.pop();
     }
@@ -120,5 +142,35 @@ public class TeleporterConfig {
         } catch (Exception ignored) {
         }
         return DEFAULT_MAX_COST;
+    }
+
+    public static boolean isCuriosEnabled() {
+        try {
+            if (SPEC.isLoaded()) {
+                return INSTANCE.enableCurios.get();
+            }
+        } catch (Exception ignored) {
+        }
+        return DEFAULT_ENABLE_CURIOS;
+    }
+
+    public static boolean isKeybindEnabled() {
+        try {
+            if (SPEC.isLoaded()) {
+                return INSTANCE.enableKeybind.get();
+            }
+        } catch (Exception ignored) {
+        }
+        return DEFAULT_ENABLE_KEYBIND;
+    }
+
+    public static boolean isKeybindSearchInventoryEnabled() {
+        try {
+            if (SPEC.isLoaded()) {
+                return INSTANCE.keybindSearchInventory.get();
+            }
+        } catch (Exception ignored) {
+        }
+        return DEFAULT_SEARCH_INVENTORY;
     }
 }

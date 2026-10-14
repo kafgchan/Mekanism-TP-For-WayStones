@@ -14,5 +14,11 @@ public class ModPayloads {
                 PacketTeleportRequest.STREAM_CODEC,
                 PacketTeleportRequest::handle
         );
+
+        registrar.playToServer(
+                PacketOpenTeleporterRequest.TYPE,
+                PacketOpenTeleporterRequest.STREAM_CODEC,
+                PacketOpenTeleporterRequest::handle
+        );
     }
 }
