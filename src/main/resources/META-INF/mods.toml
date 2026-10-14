@@ -67,3 +67,10 @@ Features include Forge Energy (FE) management, ownership security, distance-base
     ordering="AFTER"
     side="BOTH"
 
+[[dependencies.${mod_id}]]
+    modId="curios"
+    mandatory=false
+    versionRange="[5.0.0.0,)"
+    ordering="AFTER"
+    side="BOTH"
+

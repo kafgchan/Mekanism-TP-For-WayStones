@@ -18,5 +18,8 @@
   "gui.mekanism_waystones.destination": "転送先",
   "gui.mekanism_waystones.dimension": "ディメンション: %s",
   "gui.mekanism_waystones.distance": "距離: %s",
-  "gui.mekanism_waystones.cost": "消費エネルギー: %s FE"
+  "gui.mekanism_waystones.cost": "消費エネルギー: %s FE",
+  "key.categories.mekanism_waystones": "Mekanism: TP for Waystones",
+  "key.mekanism_waystones.open_teleporter": "携帯テレポート端末を開く",
+  "message.mekanism_waystones.teleporter_not_found": "Curiosスロットまたはインベントリ内にポータブルテレポーターが見つかりません。"
 }

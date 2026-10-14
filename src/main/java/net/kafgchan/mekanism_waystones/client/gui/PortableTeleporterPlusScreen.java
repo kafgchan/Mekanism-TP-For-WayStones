@@ -130,7 +130,7 @@ public class PortableTeleporterPlusScreen extends AbstractContainerScreen<Portab
         if (selectedTarget == null || !teleportButton.active) {
             return;
         }
-        ModNetwork.sendToServer(new PacketTeleportRequest(menu.getHand(), selectedTarget));
+        ModNetwork.sendToServer(new PacketTeleportRequest(menu.getSource(), selectedTarget));
         this.onClose();
     }
 

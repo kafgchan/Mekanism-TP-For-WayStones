@@ -18,5 +18,8 @@
   "gui.mekanism_waystones.destination": "Destination",
   "gui.mekanism_waystones.dimension": "Dimension: %s",
   "gui.mekanism_waystones.distance": "Distance: %s",
-  "gui.mekanism_waystones.cost": "Cost: %s FE"
+  "gui.mekanism_waystones.cost": "Cost: %s FE",
+  "key.categories.mekanism_waystones": "Mekanism: TP for Waystones",
+  "key.mekanism_waystones.open_teleporter": "Open Portable Teleporter",
+  "message.mekanism_waystones.teleporter_not_found": "No Portable Teleporter Plus found in Curios slots or inventory."
 }

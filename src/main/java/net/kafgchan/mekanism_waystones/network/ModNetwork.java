@@ -31,6 +31,12 @@ public final class ModNetwork {
                 .encoder(PacketTeleportRequest::encode)
                 .consumerNetworkThread(PacketTeleportRequest::handle)
                 .add();
+
+        CHANNEL.messageBuilder(PacketOpenTeleporterRequest.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(PacketOpenTeleporterRequest::decode)
+                .encoder(PacketOpenTeleporterRequest::encode)
+                .consumerNetworkThread(PacketOpenTeleporterRequest::handle)
+                .add();
     }
 
     public static void sendToServer(Object msg) {

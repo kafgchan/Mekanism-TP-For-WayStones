@@ -1,6 +1,7 @@
 package net.kafgchan.mekanism_waystones.network;
 
 import net.kafgchan.mekanism_waystones.target.TeleportExecutionService;
+import net.kafgchan.mekanism_waystones.target.TeleportLocationSource;
 import net.kafgchan.mekanism_waystones.target.TeleportTarget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,16 +14,20 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class PacketTeleportRequest {
-    private final InteractionHand hand;
+    private final TeleportLocationSource source;
     private final TeleportTarget target;
 
-    public PacketTeleportRequest(InteractionHand hand, TeleportTarget target) {
-        this.hand = hand;
+    public PacketTeleportRequest(TeleportLocationSource source, TeleportTarget target) {
+        this.source = source;
         this.target = target;
     }
 
-    public InteractionHand getHand() {
-        return hand;
+    public PacketTeleportRequest(InteractionHand hand, TeleportTarget target) {
+        this(TeleportLocationSource.ofHand(hand), target);
+    }
+
+    public TeleportLocationSource getSource() {
+        return source;
     }
 
     public TeleportTarget getTarget() {
@@ -30,14 +35,14 @@ public class PacketTeleportRequest {
     }
 
     public static void encode(PacketTeleportRequest msg, FriendlyByteBuf buf) {
-        buf.writeBoolean(msg.hand == InteractionHand.MAIN_HAND);
+        msg.source.encode(buf);
         msg.target.encode(buf);
     }
 
     public static PacketTeleportRequest decode(FriendlyByteBuf buf) {
-        InteractionHand hand = buf.readBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+        TeleportLocationSource source = TeleportLocationSource.decode(buf);
         TeleportTarget target = TeleportTarget.decode(buf);
-        return new PacketTeleportRequest(hand, target);
+        return new PacketTeleportRequest(source, target);
     }
 
     public static void handle(PacketTeleportRequest msg, Supplier<NetworkEvent.Context> ctxSupplier) {
@@ -45,7 +50,7 @@ public class PacketTeleportRequest {
         ctx.enqueueWork(() -> {
             ServerPlayer serverPlayer = ctx.getSender();
             if (serverPlayer != null) {
-                ItemStack stack = serverPlayer.getItemInHand(msg.hand);
+                ItemStack stack = msg.source.findItem(serverPlayer);
                 TeleportExecutionService.Result result = TeleportExecutionService.executeTeleport(serverPlayer, stack, msg.target);
                 if (result == TeleportExecutionService.Result.SUCCESS) {
                     serverPlayer.closeContainer();

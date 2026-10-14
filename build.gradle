@@ -131,6 +131,10 @@ repositories {
         name = "Twelve Iterations"
         url = "https://maven.twelveiterations.com/repository/maven-public/"
     }
+    maven {
+        name = "TheIllusiveC4 Maven"
+        url = "https://maven.theillusivec4.top/"
+    }
     mavenCentral()
 }
 
@@ -144,6 +148,10 @@ dependencies {
     // Waystones & Balm
     implementation fg.deobf("curse.maven:waystones-245755:${waystones_file_id}")
     implementation fg.deobf("curse.maven:balm-531761:${balm_file_id}")
+
+    // Curios API (Optional soft dependency)
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
 
     // JUnit 5 for unit testing
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'

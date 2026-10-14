@@ -2,6 +2,7 @@ package net.kafgchan.mekanism_waystones.menu;
 
 import net.kafgchan.mekanism_waystones.registration.ModItems;
 import net.kafgchan.mekanism_waystones.registration.ModMenuTypes;
+import net.kafgchan.mekanism_waystones.target.TeleportLocationSource;
 import net.kafgchan.mekanism_waystones.target.TeleportTarget;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,13 +16,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class PortableTeleporterPlusMenu extends AbstractContainerMenu {
-    private final InteractionHand hand;
+    private final TeleportLocationSource source;
     private final List<TeleportTarget> targets;
     private final int energy;
 
-    public PortableTeleporterPlusMenu(int containerId, Inventory playerInventory, InteractionHand hand, List<TeleportTarget> targets, int energy) {
+    public PortableTeleporterPlusMenu(int containerId, Inventory playerInventory, TeleportLocationSource source, List<TeleportTarget> targets, int energy) {
         super(ModMenuTypes.PORTABLE_TELEPORTER_PLUS.get(), containerId);
-        this.hand = hand;
+        this.source = source;
         this.targets = targets != null ? List.copyOf(targets) : Collections.emptyList();
         this.energy = energy;
 
@@ -39,8 +40,16 @@ public class PortableTeleporterPlusMenu extends AbstractContainerMenu {
         }
     }
 
+    public PortableTeleporterPlusMenu(int containerId, Inventory playerInventory, InteractionHand hand, List<TeleportTarget> targets, int energy) {
+        this(containerId, playerInventory, TeleportLocationSource.ofHand(hand), targets, energy);
+    }
+
+    public TeleportLocationSource getSource() {
+        return source;
+    }
+
     public InteractionHand getHand() {
-        return hand;
+        return source.getHand();
     }
 
     public List<TeleportTarget> getTargets() {
@@ -62,7 +71,7 @@ public class PortableTeleporterPlusMenu extends AbstractContainerMenu {
         if (!player.isAlive()) {
             return false;
         }
-        ItemStack held = player.getItemInHand(hand);
-        return !held.isEmpty() && held.is(ModItems.PORTABLE_TELEPORTER_PLUS.get());
+        ItemStack item = source.findItem(player);
+        return !item.isEmpty() && item.is(ModItems.PORTABLE_TELEPORTER_PLUS.get());
     }
 }

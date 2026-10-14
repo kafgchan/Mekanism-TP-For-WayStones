@@ -1,8 +1,10 @@
 package net.kafgchan.mekanism_waystones.item;
 
+import net.kafgchan.mekanism_waystones.compat.curios.CuriosCompat;
 import net.kafgchan.mekanism_waystones.config.TeleporterConfig;
 import net.kafgchan.mekanism_waystones.menu.PortableTeleporterPlusMenu;
 import net.kafgchan.mekanism_waystones.target.TeleportDestinationService;
+import net.kafgchan.mekanism_waystones.target.TeleportLocationSource;
 import net.kafgchan.mekanism_waystones.target.TeleportTarget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
@@ -124,45 +126,56 @@ public class ItemPortableTeleporterPlus extends Item {
                 .withStyle(ChatFormatting.DARK_GRAY));
     }
 
+    public static boolean checkOrSetOwner(ServerPlayer player, ItemStack stack) {
+        TeleporterOwner owner = getOwner(stack);
+        if (owner == null) {
+            // 初回使用時: 使用者のUUIDと名前を所有者として登録
+            TeleporterOwner newOwner = new TeleporterOwner(player.getUUID(), player.getName().getString());
+            setOwner(stack, newOwner);
+            player.sendSystemMessage(Component.translatable("message.mekanism_waystones.owner_registered", player.getName().getString())
+                    .withStyle(ChatFormatting.GREEN));
+            return true;
+        } else if (!owner.isOwner(player.getUUID())) {
+            // 登録された所有者と異なるプレイヤーによる操作を拒否
+            player.sendSystemMessage(Component.translatable("message.mekanism_waystones.not_owner", owner.name())
+                    .withStyle(ChatFormatting.RED));
+            return false;
+        }
+        return true;
+    }
+
+    public static void openGui(ServerPlayer serverPlayer, ItemStack stack, TeleportLocationSource source) {
+        if (!checkOrSetOwner(serverPlayer, stack)) {
+            return;
+        }
+        List<TeleportTarget> destinations = TeleportDestinationService.getAvailableTargets(serverPlayer);
+        int currentEnergy = getEnergy(stack);
+
+        NetworkHooks.openScreen(
+                serverPlayer,
+                new SimpleMenuProvider(
+                        (id, inv, p) -> new PortableTeleporterPlusMenu(id, inv, source, destinations, currentEnergy),
+                        Component.translatable("item.mekanism_waystones.portable_teleporter_plus")
+                ),
+                buf -> {
+                    source.encode(buf);
+                    buf.writeVarInt(currentEnergy);
+                    buf.writeVarInt(destinations.size());
+                    for (TeleportTarget target : destinations) {
+                        target.encode(buf);
+                    }
+                }
+        );
+    }
+
     @NotNull
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!level.isClientSide()) {
-            TeleporterOwner owner = getOwner(stack);
-            if (owner == null) {
-                // 初回使用時: 使用者のUUIDと名前を所有者として登録
-                TeleporterOwner newOwner = new TeleporterOwner(player.getUUID(), player.getName().getString());
-                setOwner(stack, newOwner);
-                player.sendSystemMessage(Component.translatable("message.mekanism_waystones.owner_registered", player.getName().getString())
-                        .withStyle(ChatFormatting.GREEN));
-            } else if (!owner.isOwner(player.getUUID())) {
-                // 登録された所有者と異なるプレイヤーによる操作を拒否
-                player.sendSystemMessage(Component.translatable("message.mekanism_waystones.not_owner", owner.name())
-                        .withStyle(ChatFormatting.RED));
-                return InteractionResultHolder.fail(stack);
-            }
-
             if (player instanceof ServerPlayer serverPlayer) {
-                List<TeleportTarget> destinations = TeleportDestinationService.getAvailableTargets(serverPlayer);
-                int currentEnergy = getEnergy(stack);
-
-                NetworkHooks.openScreen(
-                        serverPlayer,
-                        new SimpleMenuProvider(
-                                (id, inv, p) -> new PortableTeleporterPlusMenu(id, inv, hand, destinations, currentEnergy),
-                                Component.translatable("item.mekanism_waystones.portable_teleporter_plus")
-                        ),
-                        buf -> {
-                            buf.writeBoolean(hand == InteractionHand.MAIN_HAND);
-                            buf.writeVarInt(currentEnergy);
-                            buf.writeVarInt(destinations.size());
-                            for (TeleportTarget target : destinations) {
-                                target.encode(buf);
-                            }
-                        }
-                );
+                openGui(serverPlayer, stack, TeleportLocationSource.ofHand(hand));
             }
         }
 
@@ -171,14 +184,14 @@ public class ItemPortableTeleporterPlus extends Item {
 
     @Override
     public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new EnergyCapabilityProvider(stack);
+        return CuriosCompat.createCapabilityProvider(stack);
     }
 
     /**
      * Forge Energy Capability Provider
      * Mekanism 充電器や FE 機器との完全な連携を提供
      */
-    private static class EnergyCapabilityProvider implements ICapabilityProvider, IEnergyStorage {
+    public static class EnergyCapabilityProvider implements ICapabilityProvider, IEnergyStorage {
         private final ItemStack stack;
         private final LazyOptional<IEnergyStorage> holder = LazyOptional.of(() -> this);
 

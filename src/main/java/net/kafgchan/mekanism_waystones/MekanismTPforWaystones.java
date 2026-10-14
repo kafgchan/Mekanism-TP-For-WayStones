@@ -28,7 +28,10 @@ public class MekanismTPforWaystones {
         IEventBus modEventBus = context.getModEventBus();
 
         modEventBus.addListener(this::commonSetup);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(this::clientSetup));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            modEventBus.addListener(this::clientSetup);
+            net.kafgchan.mekanism_waystones.client.ModKeyMappings.init(modEventBus);
+        });
 
         // Config 登録
         context.registerConfig(ModConfig.Type.COMMON, TeleporterConfig.SPEC);
