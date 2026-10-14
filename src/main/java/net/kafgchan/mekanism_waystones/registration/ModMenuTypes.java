@@ -5,7 +5,6 @@ import net.kafgchan.mekanism_waystones.menu.PortableTeleporterPlusMenu;
 import net.kafgchan.mekanism_waystones.target.TeleportTarget;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;

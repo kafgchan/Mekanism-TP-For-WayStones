@@ -45,7 +45,7 @@
 
 3×3 作業台で以下の通りクラフト可能です：
 
-```
+```text
 [ HDPE Pellet ]   [ Redstone Torch ]        [ HDPE Pellet ]
 [ Energy Tablet ] [ Teleportation Core ]    [ Energy Tablet ]
 [ HDPE Pellet ]   [ Warp Stone (Waystones)] [ HDPE Pellet ]
@@ -138,6 +138,7 @@ Mod の各種数値は `config/mekanism_waystones-common.toml` から自由に�
 ## 📝 更新履歴 / Changelog
 
 ### v1.0.2
+
 - **Curios API オプション連携**:
   - アクセサリーインベントリに専用スロット「**Portable Teleporter** (`portable_teleporter`)」を新設。
   - Mekanism 純正 Portable Teleporter と Portable Teleporter Plus の共用装備に対応。
