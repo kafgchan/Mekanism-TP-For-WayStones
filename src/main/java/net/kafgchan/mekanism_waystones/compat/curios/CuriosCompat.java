@@ -2,14 +2,12 @@ package net.kafgchan.mekanism_waystones.compat.curios;
 
 import net.kafgchan.mekanism_waystones.config.TeleporterConfig;
 import net.kafgchan.mekanism_waystones.item.ItemPortableTeleporterPlus;
-import net.kafgchan.mekanism_waystones.registration.ModItems;
 import net.kafgchan.mekanism_waystones.target.TeleportLocationSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
