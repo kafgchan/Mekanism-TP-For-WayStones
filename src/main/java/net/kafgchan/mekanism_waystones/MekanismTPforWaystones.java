@@ -42,6 +42,7 @@ public class MekanismTPforWaystones {
         ModMenuTypes.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(net.kafgchan.mekanism_waystones.compat.mekanism.MekanismTeleporterHelper.class);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
