@@ -99,4 +99,26 @@ public class TeleportLocationSource {
                 return ItemStack.EMPTY;
         }
     }
+
+    public void setItem(Player player, ItemStack stack) {
+        if (player == null) {
+            return;
+        }
+
+        switch (type) {
+            case HAND:
+                player.setItemInHand(getHand(), stack);
+                break;
+            case CURIOS:
+                if (CuriosCompat.isLoaded()) {
+                    CuriosCompat.setItem(player, curiosIdentifier, slotIndex, stack);
+                }
+                break;
+            case INVENTORY:
+                if (slotIndex >= 0 && slotIndex < player.getInventory().getContainerSize()) {
+                    player.getInventory().setItem(slotIndex, stack);
+                }
+                break;
+        }
+    }
 }

@@ -77,6 +77,41 @@ public record PacketOpenTeleporterRequest() implements CustomPacketPayload {
                 }
             }
 
+            // 4. Mekanism 純正 Portable Teleporter 探索 (Plus版が見つからなかった場合)
+            // 4-1. Curios スロット探索
+            if (CuriosCompat.isLoaded()) {
+                Optional<TeleportLocationSource> mekCurios = CuriosCompat.findMatchingCurio(player, net.kafgchan.mekanism_waystones.compat.mekanism.MekanismTeleporterHelper::isMekanismTeleporter);
+                if (mekCurios.isPresent()) {
+                    TeleportLocationSource source = mekCurios.get();
+                    ItemStack stack = source.findItem(player);
+                    if (!stack.isEmpty()) {
+                        net.kafgchan.mekanism_waystones.compat.mekanism.MekanismTeleporterHelper.openMekanismGui(player, stack, source);
+                        return;
+                    }
+                }
+            }
+
+            // 4-2. 手持ち探索 (メインハンド -> オフハンド)
+            if (net.kafgchan.mekanism_waystones.compat.mekanism.MekanismTeleporterHelper.isMekanismTeleporter(mainHand)) {
+                net.kafgchan.mekanism_waystones.compat.mekanism.MekanismTeleporterHelper.openMekanismGui(player, mainHand, TeleportLocationSource.ofHand(InteractionHand.MAIN_HAND));
+                return;
+            }
+            if (net.kafgchan.mekanism_waystones.compat.mekanism.MekanismTeleporterHelper.isMekanismTeleporter(offHand)) {
+                net.kafgchan.mekanism_waystones.compat.mekanism.MekanismTeleporterHelper.openMekanismGui(player, offHand, TeleportLocationSource.ofHand(InteractionHand.OFF_HAND));
+                return;
+            }
+
+            // 4-3. インベントリ探索 (設定で許可されている場合)
+            if (TeleporterConfig.isKeybindSearchInventoryEnabled()) {
+                for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                    ItemStack invStack = player.getInventory().getItem(i);
+                    if (net.kafgchan.mekanism_waystones.compat.mekanism.MekanismTeleporterHelper.isMekanismTeleporter(invStack)) {
+                        net.kafgchan.mekanism_waystones.compat.mekanism.MekanismTeleporterHelper.openMekanismGui(player, invStack, TeleportLocationSource.ofInventory(i));
+                        return;
+                    }
+                }
+            }
+
             // 見つからなかった場合の通知
             player.sendSystemMessage(Component.translatable("message.mekanism_waystones.teleporter_not_found")
                     .withStyle(ChatFormatting.RED));

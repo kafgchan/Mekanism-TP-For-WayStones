@@ -35,10 +35,23 @@ public class CuriosCompat {
         return CuriosInternalHandler.getItem(player, identifier, slotIndex);
     }
 
+    public static void setItem(Player player, String identifier, int slotIndex, ItemStack stack) {
+        if (isLoaded()) {
+            CuriosInternalHandler.setItem(player, identifier, slotIndex, stack);
+        }
+    }
+
     public static Optional<TeleportLocationSource> findTeleporterInCurios(Player player) {
         if (!isLoaded()) {
             return Optional.empty();
         }
         return CuriosInternalHandler.findTeleporter(player);
+    }
+
+    public static Optional<TeleportLocationSource> findMatchingCurio(Player player, java.util.function.Predicate<ItemStack> filter) {
+        if (!isLoaded()) {
+            return Optional.empty();
+        }
+        return CuriosInternalHandler.findMatchingCurio(player, filter);
     }
 }

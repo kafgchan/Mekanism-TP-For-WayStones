@@ -35,6 +35,7 @@ public class MekanismTPforWaystones {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(net.kafgchan.mekanism_waystones.compat.mekanism.MekanismTeleporterHelper.class);
         LOGGER.info("Mekanism: TP for Waystones initialized.");
     }
 

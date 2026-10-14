@@ -45,11 +45,27 @@ public class CuriosInternalHandler {
         return ItemStack.EMPTY;
     }
 
-    public static Optional<TeleportLocationSource> findTeleporter(Player player) {
+    public static void setItem(Player player, String identifier, int slotIndex, ItemStack stack) {
         Optional<ICuriosItemHandler> opt = CuriosApi.getCuriosInventory(player);
         if (opt.isPresent()) {
             ICuriosItemHandler handler = opt.get();
-            Optional<SlotResult> result = handler.findFirstCurio(stack -> stack.is(ModItems.PORTABLE_TELEPORTER_PLUS.get()));
+            Map<String, ICurioStacksHandler> curios = handler.getCurios();
+            ICurioStacksHandler stacksHandler = curios.get(identifier);
+            if (stacksHandler != null && slotIndex >= 0 && slotIndex < stacksHandler.getSlots()) {
+                stacksHandler.getStacks().setStackInSlot(slotIndex, stack);
+            }
+        }
+    }
+
+    public static Optional<TeleportLocationSource> findTeleporter(Player player) {
+        return findMatchingCurio(player, stack -> stack.is(ModItems.PORTABLE_TELEPORTER_PLUS.get()));
+    }
+
+    public static Optional<TeleportLocationSource> findMatchingCurio(Player player, java.util.function.Predicate<ItemStack> filter) {
+        Optional<ICuriosItemHandler> opt = CuriosApi.getCuriosInventory(player);
+        if (opt.isPresent()) {
+            ICuriosItemHandler handler = opt.get();
+            Optional<SlotResult> result = handler.findFirstCurio(filter);
             if (result.isPresent()) {
                 SlotResult sr = result.get();
                 return Optional.of(TeleportLocationSource.ofCurios(sr.slotContext().identifier(), sr.slotContext().index()));
