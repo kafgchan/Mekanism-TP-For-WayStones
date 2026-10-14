@@ -21,5 +21,7 @@
   "gui.mekanism_waystones.cost": "消耗能量：%s FE",
   "key.categories.mekanism_waystones": "Mekanism: TP for Waystones",
   "key.mekanism_waystones.open_teleporter": "開啟便攜式傳送器",
-  "message.mekanism_waystones.teleporter_not_found": "在飾物欄或背包中未找到便攜式傳送器。"
+  "message.mekanism_waystones.teleporter_not_found": "在飾物欄或背包中未找到便攜式傳送器。",
+  "curios.identifier.portable_teleporter": "可攜式傳送器",
+  "curios.modifiers.portable_teleporter": "裝備於可攜式傳送器欄位時:"
 }

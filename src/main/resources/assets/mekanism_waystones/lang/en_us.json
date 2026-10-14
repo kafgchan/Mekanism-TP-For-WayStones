@@ -21,5 +21,7 @@
   "gui.mekanism_waystones.cost": "Cost: %s FE",
   "key.categories.mekanism_waystones": "Mekanism: TP for Waystones",
   "key.mekanism_waystones.open_teleporter": "Open Portable Teleporter",
-  "message.mekanism_waystones.teleporter_not_found": "No Portable Teleporter Plus found in Curios slots or inventory."
+  "message.mekanism_waystones.teleporter_not_found": "No Portable Teleporter Plus found in Curios slots or inventory.",
+  "curios.identifier.portable_teleporter": "Portable Teleporter",
+  "curios.modifiers.portable_teleporter": "When in portable teleporter slot:"
 }
