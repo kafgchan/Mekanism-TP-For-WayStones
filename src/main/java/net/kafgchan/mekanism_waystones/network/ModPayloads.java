@@ -20,5 +20,18 @@ public class ModPayloads {
                 PacketOpenTeleporterRequest.STREAM_CODEC,
                 PacketOpenTeleporterRequest::handle
         );
+
+        registrar.playToServer(
+                PacketToggleFavorite.TYPE,
+                PacketToggleFavorite.STREAM_CODEC,
+                PacketToggleFavorite::handle
+        );
+
+        registrar.playToServer(
+                PacketSetQuickTarget.TYPE,
+                PacketSetQuickTarget.STREAM_CODEC,
+                PacketSetQuickTarget::handle
+        );
     }
 }
+

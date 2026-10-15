@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": {
+      "item": "minecraft:copper_ingot"
+    },
+    "B": {
+      "item": "minecraft:redstone_torch"
+    },
+    "C": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "D": {
+      "item": "mekanism_waystones:disposable_battery"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ACA",
+    "ADA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mekanism_waystones:disposable_teleporter"
+  }
+}

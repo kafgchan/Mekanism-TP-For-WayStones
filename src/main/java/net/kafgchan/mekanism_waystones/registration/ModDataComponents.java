@@ -28,6 +28,13 @@ public final class ModDataComponents {
                     .networkSynchronized(ByteBufCodecs.VAR_INT)
             );
 
+    // クイックテレポート先 (TeleportTarget)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<net.kafgchan.mekanism_waystones.target.TeleportTarget>> QUICK_TARGET =
+            DATA_COMPONENTS.registerComponentType("quick_target", builder -> builder
+                    .persistent(net.kafgchan.mekanism_waystones.target.TeleportTarget.CODEC)
+                    .networkSynchronized(net.kafgchan.mekanism_waystones.target.TeleportTarget.STREAM_CODEC)
+            );
+
     private ModDataComponents() {
     }
 

@@ -22,9 +22,14 @@ public class ModMenuTypes {
                 net.kafgchan.mekanism_waystones.target.TeleportLocationSource source =
                         net.kafgchan.mekanism_waystones.target.TeleportLocationSource.STREAM_CODEC.decode(buf);
                 int energy = buf.readVarInt();
+                boolean isDisposable = buf.readBoolean();
+                boolean hasQuickTarget = buf.readBoolean();
+                TeleportTarget quickTarget = hasQuickTarget ? TeleportTarget.STREAM_CODEC.decode(buf) : null;
+                List<String> favorites = ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()).decode(buf);
                 List<TeleportTarget> targets = TeleportTarget.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
-                return new PortableTeleporterPlusMenu(containerId, inv, source, targets, energy);
+                return new PortableTeleporterPlusMenu(containerId, inv, source, targets, energy, quickTarget, favorites, isDisposable);
             }));
+
 
     public static void register(IEventBus modEventBus) {
         MENUS.register(modEventBus);

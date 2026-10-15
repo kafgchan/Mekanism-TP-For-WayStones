@@ -86,8 +86,17 @@ public class ItemPortableTeleporterPlus extends Item {
                 nf.format(currentEnergy), nf.format(getMaxEnergy()))
                 .withStyle(ChatFormatting.GREEN));
 
+        // クイックテレポート先
+        net.kafgchan.mekanism_waystones.target.TeleportTarget quickTarget = stack.get(ModDataComponents.QUICK_TARGET.get());
+        if (quickTarget != null) {
+            tooltip.add(Component.translatable("tooltip.mekanism_waystones.quick_target", quickTarget.name())
+                    .withStyle(ChatFormatting.GOLD));
+        }
+
         tooltip.add(Component.translatable("tooltip.mekanism_waystones.portable_teleporter_plus.desc")
                 .withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("tooltip.mekanism_waystones.portable_teleporter_plus.quick_hint")
+                .withStyle(ChatFormatting.GRAY));
     }
 
     public static boolean checkOrSetOwner(Player player, ItemStack stack) {
@@ -113,17 +122,29 @@ public class ItemPortableTeleporterPlus extends Item {
             return;
         }
         java.util.List<net.kafgchan.mekanism_waystones.target.TeleportTarget> destinations =
-                net.kafgchan.mekanism_waystones.target.TeleportDestinationService.getAvailableTargets(serverPlayer);
+                net.kafgchan.mekanism_waystones.target.TeleportDestinationService.getAvailableTargets(serverPlayer, false);
         int currentEnergy = getEnergy(stack);
+        net.kafgchan.mekanism_waystones.target.TeleportTarget quickTarget = stack.get(ModDataComponents.QUICK_TARGET.get());
+        java.util.Set<String> favorites = net.kafgchan.mekanism_waystones.target.PlayerFavoritesService.getFavorites(serverPlayer);
 
         serverPlayer.openMenu(
                 new net.minecraft.world.SimpleMenuProvider(
-                        (id, inv, p) -> new net.kafgchan.mekanism_waystones.menu.PortableTeleporterPlusMenu(id, inv, source, destinations, currentEnergy),
+                        (id, inv, p) -> new net.kafgchan.mekanism_waystones.menu.PortableTeleporterPlusMenu(id, inv, source, destinations, currentEnergy, quickTarget, new java.util.ArrayList<>(favorites), false),
                         net.minecraft.network.chat.Component.translatable("item.mekanism_waystones.portable_teleporter_plus")
                 ),
                 buf -> {
                     net.kafgchan.mekanism_waystones.target.TeleportLocationSource.STREAM_CODEC.encode(buf, source);
                     buf.writeVarInt(currentEnergy);
+                    buf.writeBoolean(false); // isDisposable = false
+                    if (quickTarget != null) {
+                        buf.writeBoolean(true);
+                        net.kafgchan.mekanism_waystones.target.TeleportTarget.STREAM_CODEC.encode(buf, quickTarget);
+                    } else {
+                        buf.writeBoolean(false);
+                    }
+                    net.minecraft.network.codec.ByteBufCodecs.STRING_UTF8
+                            .apply(net.minecraft.network.codec.ByteBufCodecs.list())
+                            .encode(buf, new java.util.ArrayList<>(favorites));
                     net.kafgchan.mekanism_waystones.target.TeleportTarget.STREAM_CODEC
                             .apply(net.minecraft.network.codec.ByteBufCodecs.list())
                             .encode(buf, destinations);
@@ -138,10 +159,46 @@ public class ItemPortableTeleporterPlus extends Item {
 
         if (!level.isClientSide()) {
             if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-                openGui(serverPlayer, stack, net.kafgchan.mekanism_waystones.target.TeleportLocationSource.ofHand(hand));
+                if (serverPlayer.isShiftKeyDown()) {
+                    // Shift + 右クリック: クイックテレポート
+                    executeQuickTeleport(serverPlayer, stack, net.kafgchan.mekanism_waystones.target.TeleportLocationSource.ofHand(hand));
+                } else {
+                    // 通常右クリック: GUI起動
+                    openGui(serverPlayer, stack, net.kafgchan.mekanism_waystones.target.TeleportLocationSource.ofHand(hand));
+                }
             }
         }
 
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
+
+    private static void executeQuickTeleport(net.minecraft.server.level.ServerPlayer serverPlayer, ItemStack stack, net.kafgchan.mekanism_waystones.target.TeleportLocationSource source) {
+        if (!checkOrSetOwner(serverPlayer, stack)) {
+            return;
+        }
+
+        net.kafgchan.mekanism_waystones.target.TeleportTarget quickTarget = stack.get(ModDataComponents.QUICK_TARGET.get());
+        if (quickTarget == null) {
+            serverPlayer.sendSystemMessage(
+                    Component.translatable("message.mekanism_waystones.quick_target_not_set")
+                            .withStyle(ChatFormatting.RED)
+            );
+            return;
+        }
+
+        net.kafgchan.mekanism_waystones.target.TeleportExecutionService.Result result =
+                net.kafgchan.mekanism_waystones.target.TeleportExecutionService.executeTeleport(serverPlayer, stack, quickTarget);
+
+        if (result != net.kafgchan.mekanism_waystones.target.TeleportExecutionService.Result.SUCCESS) {
+            Component msg = switch (result) {
+                case NOT_OWNER -> Component.translatable("message.mekanism_waystones.not_owner_generic");
+                case INSUFFICIENT_ENERGY -> Component.translatable("message.mekanism_waystones.insufficient_energy");
+                case TARGET_NOT_FOUND -> Component.translatable("message.mekanism_waystones.target_not_found");
+                case UNSAFE_DESTINATION -> Component.translatable("message.mekanism_waystones.unsafe_destination");
+                default -> Component.translatable("message.mekanism_waystones.teleport_failed");
+            };
+            serverPlayer.sendSystemMessage(msg.copy().withStyle(ChatFormatting.RED));
+        }
+    }
+
 }
