@@ -37,7 +37,20 @@ public final class ModNetwork {
                 .encoder(PacketOpenTeleporterRequest::encode)
                 .consumerNetworkThread(PacketOpenTeleporterRequest::handle)
                 .add();
+
+        CHANNEL.messageBuilder(PacketToggleFavorite.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(PacketToggleFavorite::decode)
+                .encoder(PacketToggleFavorite::encode)
+                .consumerNetworkThread(PacketToggleFavorite::handle)
+                .add();
+
+        CHANNEL.messageBuilder(PacketSetQuickTarget.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(PacketSetQuickTarget::decode)
+                .encoder(PacketSetQuickTarget::encode)
+                .consumerNetworkThread(PacketSetQuickTarget::handle)
+                .add();
     }
+
 
     public static void sendToServer(Object msg) {
         CHANNEL.sendToServer(msg);

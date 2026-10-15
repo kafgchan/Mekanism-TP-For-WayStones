@@ -22,13 +22,22 @@ public final class ModMenuTypes {
             MENUS.register("portable_teleporter_plus", () -> IForgeMenuType.create((containerId, inv, buf) -> {
                 TeleportLocationSource source = TeleportLocationSource.decode(buf);
                 int energy = buf.readVarInt();
+                boolean isDisposable = buf.readBoolean();
+                boolean hasQuickTarget = buf.readBoolean();
+                TeleportTarget quickTarget = hasQuickTarget ? TeleportTarget.decode(buf) : null;
+                int favSize = buf.readVarInt();
+                List<String> favorites = new ArrayList<>(favSize);
+                for (int i = 0; i < favSize; i++) {
+                    favorites.add(buf.readUtf());
+                }
                 int size = buf.readVarInt();
                 List<TeleportTarget> targets = new ArrayList<>(size);
                 for (int i = 0; i < size; i++) {
                     targets.add(TeleportTarget.decode(buf));
                 }
-                return new PortableTeleporterPlusMenu(containerId, inv, source, targets, energy);
+                return new PortableTeleporterPlusMenu(containerId, inv, source, targets, energy, quickTarget, favorites, isDisposable);
             }));
+
 
     private ModMenuTypes() {
     }

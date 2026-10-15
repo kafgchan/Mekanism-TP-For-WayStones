@@ -50,39 +50,47 @@ public final class TeleportExecutionService {
      * テレポートを実行する (サーバー側処理)
      */
     public static Result executeTeleport(ServerPlayer player, ItemStack stack, TeleportTarget requestedTarget) {
-        // 1. 所有権の検証
-        TeleporterOwner owner = ItemPortableTeleporterPlus.getOwner(stack);
-        if (owner == null || !owner.isOwner(player.getUUID())) {
-            MekanismTPforWaystones.LOGGER.warn("Ownership check failed: player '{}' is not the owner of the device", player.getName().getString());
-            return Result.NOT_OWNER;
+        boolean isDisposable = stack.is(net.kafgchan.mekanism_waystones.registration.ModItems.DISPOSABLE_TELEPORTER.get());
+
+        // 1. 所有権の検証 (使い捨てテレポーターは所有者チェック不要)
+        if (!isDisposable) {
+            TeleporterOwner owner = ItemPortableTeleporterPlus.getOwner(stack);
+            if (owner == null || !owner.isOwner(player.getUUID())) {
+                MekanismTPforWaystones.LOGGER.warn("Ownership check failed: player '{}' is not the owner of the device", player.getName().getString());
+                return Result.NOT_OWNER;
+            }
         }
 
-        // 2. サーバー側での転送先再解決 (クライアントの座標改ざん・未開放地点要求を遮断)
-        Optional<TeleportTarget> verifiedTargetOpt = TeleportDestinationService.resolveTarget(player, requestedTarget.type(), requestedTarget.id());
+        // 2. サーバー側での転送先再解決 (クライアントの座標改ざん・未開放地点・非公開地点要求を遮断)
+        Optional<TeleportTarget> verifiedTargetOpt = TeleportDestinationService.resolveTarget(player, requestedTarget.type(), requestedTarget.id(), isDisposable);
         if (verifiedTargetOpt.isEmpty()) {
-            MekanismTPforWaystones.LOGGER.warn("Unverified target request from player '{}': type={}, id={}",
-                    player.getName().getString(), requestedTarget.type(), requestedTarget.id());
+            MekanismTPforWaystones.LOGGER.warn("Unverified target request from player '{}': type={}, id={}, isDisposable={}",
+                    player.getName().getString(), requestedTarget.type(), requestedTarget.id(), isDisposable);
             return Result.TARGET_NOT_FOUND;
         }
         TeleportTarget verifiedTarget = verifiedTargetOpt.get();
 
-        // 3. 必要エネルギー (FE) の計算 (サーバー側で解決した正規座標を使用)
-        int cost = TeleportCostCalculator.calculateCost(
-                player.level().dimension(),
-                player.position(),
-                verifiedTarget.dimension(),
-                Vec3.atCenterOf(verifiedTarget.pos())
-        );
+        int cost = 0;
+        int currentEnergy = 0;
 
-        // 4. エネルギー残量の検証
-        int currentEnergy = ItemPortableTeleporterPlus.getEnergy(stack);
-        if (currentEnergy < cost) {
-            MekanismTPforWaystones.LOGGER.debug("Insufficient energy for player '{}': current={}, required={}",
-                    player.getName().getString(), currentEnergy, cost);
-            return Result.INSUFFICIENT_ENERGY;
+        // 3. エネルギー残量の検証 (通常端末のみ)
+        if (!isDisposable) {
+            cost = TeleportCostCalculator.calculateCost(
+                    player.level().dimension(),
+                    player.position(),
+                    verifiedTarget.dimension(),
+                    Vec3.atCenterOf(verifiedTarget.pos())
+            );
+
+            currentEnergy = ItemPortableTeleporterPlus.getEnergy(stack);
+            if (currentEnergy < cost) {
+                MekanismTPforWaystones.LOGGER.debug("Insufficient energy for player '{}': current={}, required={}",
+                        player.getName().getString(), currentEnergy, cost);
+                return Result.INSUFFICIENT_ENERGY;
+            }
         }
 
-        // 5. 目標ディメンションの取得
+        // 4. 目標ディメンションの取得
         ServerLevel targetLevel = player.server.getLevel(verifiedTarget.dimension());
         if (targetLevel == null) {
             MekanismTPforWaystones.LOGGER.warn("Target level not found: {}", verifiedTarget.dimension());
@@ -91,22 +99,31 @@ public final class TeleportExecutionService {
 
         Result result = Result.CANCELLED_OR_FAILED;
 
-        // 6. ターゲットタイプ別のテレポート確定処理
+        // 5. ターゲットタイプ別のテレポート確定処理
         if (verifiedTarget.type() == TargetType.WAYSTONE) {
             result = teleportToWaystone(player, targetLevel, verifiedTarget);
         } else if (verifiedTarget.type() == TargetType.MEKANISM) {
             result = teleportToMekanism(player, targetLevel, verifiedTarget);
         }
 
-        // 7. 成功時のみエネルギーを確定消費 (失敗・キャンセル時は未消費)
+        // 6. 成功時のみ確定消費 (失敗・キャンセル時は未消費)
         if (result == Result.SUCCESS) {
-            ItemPortableTeleporterPlus.setEnergy(stack, currentEnergy - cost);
-            MekanismTPforWaystones.LOGGER.info("Teleport successful for player '{}' to '{}'. Consumed {} FE.",
-                    player.getName().getString(), verifiedTarget.name(), cost);
+            if (isDisposable) {
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
+                MekanismTPforWaystones.LOGGER.info("Disposable teleport successful for player '{}' to '{}'. Consumed 1 item.",
+                        player.getName().getString(), verifiedTarget.name());
+            } else {
+                ItemPortableTeleporterPlus.setEnergy(stack, currentEnergy - cost);
+                MekanismTPforWaystones.LOGGER.info("Teleport successful for player '{}' to '{}'. Consumed {} FE.",
+                        player.getName().getString(), verifiedTarget.name(), cost);
+            }
         }
 
         return result;
     }
+
 
     private static Result teleportToWaystone(ServerPlayer player, ServerLevel targetLevel, TeleportTarget target) {
         try {

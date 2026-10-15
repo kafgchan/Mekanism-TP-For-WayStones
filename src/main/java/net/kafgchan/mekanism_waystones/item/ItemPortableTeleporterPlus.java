@@ -30,8 +30,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import net.kafgchan.mekanism_waystones.target.TeleportExecutionService;
 
 /**
  * Portable Teleporter Plus
@@ -122,8 +125,33 @@ public class ItemPortableTeleporterPlus extends Item {
                 nf.format(currentEnergy), nf.format(getMaxEnergy()))
                 .withStyle(ChatFormatting.GREEN));
 
+        // クイックテレポート先
+        TeleportTarget quickTarget = getQuickTarget(stack);
+        if (quickTarget != null) {
+            tooltip.add(Component.translatable("tooltip.mekanism_waystones.quick_target", quickTarget.name())
+                    .withStyle(ChatFormatting.GOLD));
+        }
+
         tooltip.add(Component.translatable("tooltip.mekanism_waystones.portable_teleporter_plus.desc")
                 .withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("tooltip.mekanism_waystones.portable_teleporter_plus.quick_hint")
+                .withStyle(ChatFormatting.GRAY));
+    }
+
+    public static @Nullable TeleportTarget getQuickTarget(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag != null && tag.contains("quick_target")) {
+            return TeleportTarget.fromTag(tag.getCompound("quick_target"));
+        }
+        return null;
+    }
+
+    public static void setQuickTarget(ItemStack stack, TeleportTarget target) {
+        if (target != null) {
+            stack.getOrCreateTag().put("quick_target", target.toTag());
+        } else if (stack.getTag() != null) {
+            stack.getTag().remove("quick_target");
+        }
     }
 
     public static boolean checkOrSetOwner(ServerPlayer player, ItemStack stack) {
@@ -148,18 +176,31 @@ public class ItemPortableTeleporterPlus extends Item {
         if (!checkOrSetOwner(serverPlayer, stack)) {
             return;
         }
-        List<TeleportTarget> destinations = TeleportDestinationService.getAvailableTargets(serverPlayer);
+        List<TeleportTarget> destinations = TeleportDestinationService.getAvailableTargets(serverPlayer, false);
         int currentEnergy = getEnergy(stack);
+        TeleportTarget quickTarget = getQuickTarget(stack);
+        Set<String> favorites = net.kafgchan.mekanism_waystones.target.PlayerFavoritesService.getFavorites(serverPlayer);
 
         NetworkHooks.openScreen(
                 serverPlayer,
                 new SimpleMenuProvider(
-                        (id, inv, p) -> new PortableTeleporterPlusMenu(id, inv, source, destinations, currentEnergy),
+                        (id, inv, p) -> new PortableTeleporterPlusMenu(id, inv, source, destinations, currentEnergy, quickTarget, new ArrayList<>(favorites), false),
                         Component.translatable("item.mekanism_waystones.portable_teleporter_plus")
                 ),
                 buf -> {
                     source.encode(buf);
                     buf.writeVarInt(currentEnergy);
+                    buf.writeBoolean(false); // isDisposable = false
+                    if (quickTarget != null) {
+                        buf.writeBoolean(true);
+                        quickTarget.encode(buf);
+                    } else {
+                        buf.writeBoolean(false);
+                    }
+                    buf.writeVarInt(favorites.size());
+                    for (String fav : favorites) {
+                        buf.writeUtf(fav);
+                    }
                     buf.writeVarInt(destinations.size());
                     for (TeleportTarget target : destinations) {
                         target.encode(buf);
@@ -175,12 +216,46 @@ public class ItemPortableTeleporterPlus extends Item {
 
         if (!level.isClientSide()) {
             if (player instanceof ServerPlayer serverPlayer) {
-                openGui(serverPlayer, stack, TeleportLocationSource.ofHand(hand));
+                if (serverPlayer.isShiftKeyDown()) {
+                    executeQuickTeleport(serverPlayer, stack, TeleportLocationSource.ofHand(hand));
+                } else {
+                    openGui(serverPlayer, stack, TeleportLocationSource.ofHand(hand));
+                }
             }
         }
 
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
+
+    private static void executeQuickTeleport(ServerPlayer serverPlayer, ItemStack stack, TeleportLocationSource source) {
+        if (!checkOrSetOwner(serverPlayer, stack)) {
+            return;
+        }
+
+        TeleportTarget quickTarget = getQuickTarget(stack);
+        if (quickTarget == null) {
+            serverPlayer.sendSystemMessage(
+                    Component.translatable("message.mekanism_waystones.quick_target_not_set")
+                            .withStyle(ChatFormatting.RED)
+            );
+            return;
+        }
+
+        TeleportExecutionService.Result result =
+                TeleportExecutionService.executeTeleport(serverPlayer, stack, quickTarget);
+
+        if (result != TeleportExecutionService.Result.SUCCESS) {
+            Component msg = switch (result) {
+                case NOT_OWNER -> Component.translatable("message.mekanism_waystones.not_owner_generic");
+                case INSUFFICIENT_ENERGY -> Component.translatable("message.mekanism_waystones.insufficient_energy");
+                case TARGET_NOT_FOUND -> Component.translatable("message.mekanism_waystones.target_not_found");
+                case UNSAFE_DESTINATION -> Component.translatable("message.mekanism_waystones.unsafe_destination");
+                default -> Component.translatable("message.mekanism_waystones.teleport_failed");
+            };
+            serverPlayer.sendSystemMessage(msg.copy().withStyle(ChatFormatting.RED));
+        }
+    }
+
 
     @Override
     public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {

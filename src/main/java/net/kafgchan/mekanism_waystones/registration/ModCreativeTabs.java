@@ -16,7 +16,12 @@ public final class ModCreativeTabs {
             CREATIVE_MODE_TABS.register("tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.mekanism_waystones.tab"))
                     .icon(() -> ModItems.PORTABLE_TELEPORTER_PLUS.get().getDefaultInstance())
-                    .displayItems((parameters, output) -> output.accept(ModItems.PORTABLE_TELEPORTER_PLUS.get()))
+                    .displayItems((parameters, output) -> {
+                        output.accept(ModItems.PORTABLE_TELEPORTER_PLUS.get());
+                        output.accept(ModItems.DISPOSABLE_BATTERY.get());
+                        output.accept(ModItems.DISPOSABLE_TELEPORTER.get());
+                    })
+
                     .build());
 
     private ModCreativeTabs() {
